@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Bướm Báo Thù — Điệp Tử (Toàn bộ)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Noto+Serif+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-void:#0a0507;
+    --bg-deep:#170d12;
+    --violet:#8a4a78;
+    --violet-deep:#3c1f37;
+    --blood:#7d1430;
+    --blood-bright:#c4264f;
+    --amber:#d6a14a;
+    --paper:#ece2d3;
+    --text-dim:#a5908c;
+    --line: rgba(214,161,74,0.18);
+    --panel: rgba(15,9,12,0.94);
+    --teal:#3a8a8a;
+    --teal-dim:rgba(58,138,138,0.15);
+    --silver:#b0b8c8;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    margin:0; background:var(--bg-void); color:var(--paper);
+    font-family:'Be Vietnam Pro', sans-serif;
+    overflow:hidden; height:100dvh; width:100vw;
+    position:relative; user-select:none;
+  }
+  .serif{ font-family:'Noto Serif Display', serif; }
+
+  #scene-art{ position:fixed; inset:0; z-index:1; width:100%; height:100%; pointer-events:none; }
+  .art-group{ opacity:0; transition:opacity 1.1s ease; }
+  .art-group.active{ opacity:1; }
+
+  /* Existing animations */
+  @keyframes flyacross{ 0%{ transform:translate(-40px,260px) rotate(-6deg);} 50%{ transform:translate(210px,170px) rotate(8deg);} 100%{ transform:translate(440px,230px) rotate(-6deg);} }
+  .fly-butterfly{ animation: flyacross 10s ease-in-out infinite alternate; }
+  @keyframes flameflicker{ 0%,100%{ transform:scaleY(1) skewX(0deg); opacity:.88;} 30%{ transform:scaleY(1.1) skewX(-2deg); opacity:1;} 60%{ transform:scaleY(.92) skewX(2deg); opacity:.82;} }
+  .flame{ animation: flameflicker 1.5s ease-in-out infinite; transform-box:fill-box; transform-origin:bottom center; }
+  .flame:nth-child(2){ animation-delay:.2s; } .flame:nth-child(3){ animation-delay:.45s; }
+  @keyframes twitch{ 0%,100%{transform:rotate(0deg);} 10%{transform:rotate(-3deg);} 22%{transform:rotate(2deg);} 34%{transform:rotate(-4deg);} 46%{transform:rotate(1deg);} 58%{transform:rotate(-2deg);} 70%{transform:rotate(3deg);} 82%{transform:rotate(-1deg);} 94%{transform:rotate(2deg);} }
+  .pin-wing-art{ animation: twitch 2.2s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+  @keyframes dripfall{ 0%{ transform:translateY(0); opacity:.9;} 100%{ transform:translateY(34px); opacity:0;} }
+  .blood-drip{ animation: dripfall 1.8s linear infinite; }
+  .blood-drip:nth-child(2){ animation-delay:.6s; } .blood-drip:nth-child(3){ animation-delay:1.1s; }
+  @keyframes pulseglow{ 0%,100%{ opacity:.55; filter:blur(2px);} 50%{ opacity:.95; filter:blur(0px);} }
+  .lantern{ animation: pulseglow 3.2s ease-in-out infinite; }
+  @keyframes swaybranch{ 0%,100%{ transform:rotate(-1.5deg);} 50%{ transform:rotate(1.5deg);} }
+  .branch{ animation: swaybranch 5s ease-in-out infinite; transform-box:fill-box; transform-origin:top center; }
+  @keyframes doorglow{ 0%{ opacity:.25; } 100%{ opacity:1; } }
+  .crack{ animation: doorglow 3s ease-in forwards; }
+  @keyframes raysway{ 0%,100%{ opacity:.7; transform:translateX(0);} 50%{ opacity:1; transform:translateX(6px);} }
+  .godray{ animation: raysway 7s ease-in-out infinite; transform-box:fill-box; }
+  @keyframes winflicker{ 0%,100%{opacity:.85;} 45%{opacity:.25;} 52%{opacity:.9;} 70%{opacity:.35;} }
+  .win{ animation: winflicker 4s ease-in-out infinite; }
+  .win:nth-child(2n){ animation-duration:5.4s; animation-delay:.7s; }
+  .win:nth-child(3n){ animation-duration:3.1s; animation-delay:1.5s; }
+  .win:nth-child(4n){ animation-duration:6s; animation-delay:.3s; }
+
+  /* New animations for ch3-10 */
+  @keyframes floatup{ 0%{ transform:translateY(0) rotate(0deg); opacity:.8;} 100%{ transform:translateY(-60px) rotate(10deg); opacity:0;} }
+  .bubble{ animation: floatup 6s ease-in-out infinite; }
+  .bubble:nth-child(2){ animation-delay:2s; } .bubble:nth-child(3){ animation-delay:4s; }
+  @keyframes snowfall{ 0%{ transform:translateY(-10px) translateX(0); opacity:.7;} 100%{ transform:translateY(820px) translateX(30px); opacity:0;} }
+  .snowflake{ animation: snowfall 8s linear infinite; }
+  .snowflake:nth-child(2){ animation-delay:2s; animation-duration:6s; }
+  .snowflake:nth-child(3){ animation-delay:4.5s; animation-duration:10s; }
+  @keyframes heartpulse{ 0%,100%{ transform:scale(1); opacity:.6;} 50%{ transform:scale(1.15); opacity:1;} }
+  .heart{ animation: heartpulse 1.8s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+  @keyframes origami{ 0%,100%{ transform:rotate(0deg) scale(1); opacity:.7;} 50%{ transform:rotate(-8deg) scale(1.05); opacity:1;} }
+  .crane{ animation: origami 4s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+  @keyframes rotatering{ 0%{ transform:rotate(0deg); } 100%{ transform:rotate(360deg); } }
+  .ring{ animation: rotatering 20s linear infinite; transform-box:fill-box; transform-origin:center; }
+  @keyframes moonrise{ 0%,100%{opacity:.5;} 50%{opacity:.9;} }
+  .moon{ animation: moonrise 6s ease-in-out infinite; }
+
+  canvas#fx{ position:fixed; inset:0; width:100%; height:100%; z-index:2; pointer-events:none; }
+  #vignette{
+    position:fixed; inset:0; z-index:3; pointer-events:none;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0) 35%, rgba(0,0,0,0.78) 100%);
+  }
+  #flash{
+    position:fixed; inset:0; z-index:6; pointer-events:none;
+    background:var(--blood-bright); opacity:0; mix-blend-mode:screen;
+  }
+  .flash-on{ animation:flashpulse 0.45s ease-out; }
+  @keyframes flashpulse{ 0%{opacity:.55;} 100%{opacity:0;} }
+
+  #grain{
+    position:fixed; inset:-50%; width:200%; height:200%; z-index:4; pointer-events:none;
+    opacity:0.055; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:140px 140px;
+    animation: grainshift 0.8s steps(8) infinite;
+  }
+  @keyframes grainshift{
+    0%{ transform:translate(0,0); } 15%{ transform:translate(-2%,-3%); } 30%{ transform:translate(3%,2%); }
+    45%{ transform:translate(-1%,3%); } 60%{ transform:translate(2%,-2%); } 75%{ transform:translate(-3%,-1%); }
+    90%{ transform:translate(1%,2%); } 100%{ transform:translate(0,0); }
+  }
+
+  #cutveil{ position:fixed; inset:0; z-index:4; pointer-events:none; background:#000; opacity:0; }
+  .cut-on{ animation: cutfade 0.6s ease; }
+  @keyframes cutfade{ 0%{opacity:0;} 35%{opacity:.5;} 100%{opacity:0;} }
+
+  #rgb-glitch{ position:fixed; inset:0; z-index:6; pointer-events:none; opacity:0; mix-blend-mode:screen; }
+  .glitch-on{ animation: glitchflash 0.35s steps(2); }
+  @keyframes glitchflash{
+    0%{ opacity:0; box-shadow:none; }
+    20%{ opacity:.6; box-shadow:-5px 0 0 rgba(255,20,70,0.5), 5px 0 0 rgba(0,210,255,0.4); }
+    55%{ opacity:.35; box-shadow:3px 0 0 rgba(255,20,70,0.4), -3px 0 0 rgba(0,210,255,0.3); }
+    100%{ opacity:0; box-shadow:none; }
+  }
+
+  .shake{ animation: shakeit 0.35s ease-in-out; }
+  @keyframes shakeit{
+    0%,100%{ transform:translate(0,0); }
+    20%{ transform:translate(-4px,2px); }
+    40%{ transform:translate(4px,-2px); }
+    60%{ transform:translate(-3px,1px); }
+    80%{ transform:translate(3px,-1px); }
+  }
+
+  /* --- mood backgrounds --- */
+  #stage{
+    position:fixed; inset:0; z-index:0;
+    background: radial-gradient(circle at 50% 30%, var(--bg-deep) 0%, var(--bg-void) 75%);
+    transition: background 1.4s ease;
+  }
+  .mood-forest{ background: radial-gradient(circle at 50% 25%, #1c2418 0%, #120a10 55%, var(--bg-void) 100%); }
+  .mood-fire{ background: radial-gradient(circle at 50% 70%, #4a1308 0%, #1d0a0c 55%, var(--bg-void) 100%); }
+  .mood-pin{ background: radial-gradient(circle at 50% 40%, #5c0d24 0%, #1c0509 60%, var(--bg-void) 100%); }
+  .mood-ash{ background: radial-gradient(circle at 50% 50%, #2b2128 0%, #100a0d 60%, var(--bg-void) 100%); }
+  .mood-spirit{ background: radial-gradient(circle at 50% 20%, #3a2536 0%, #150c14 60%, var(--bg-void) 100%); }
+  .mood-threshold{ background: radial-gradient(circle at 50% 50%, #6b4a2e 0%, #1a1108 50%, var(--bg-void) 100%); }
+  .mood-city{ background: radial-gradient(circle at 50% 18%, #1c2530 0%, #11141c 55%, var(--bg-void) 100%); }
+  .mood-rain{ background: radial-gradient(circle at 50% 65%, #141c2e 0%, #0d0f16 55%, var(--bg-void) 100%); }
+  /* new moods */
+  .mood-hospital{ background: radial-gradient(circle at 50% 40%, #0d1c1c 0%, #091212 55%, var(--bg-void) 100%); }
+  .mood-snow{ background: radial-gradient(circle at 50% 20%, #1a1e2e 0%, #0d0f1a 55%, var(--bg-void) 100%); }
+  .mood-park{ background: radial-gradient(circle at 50% 35%, #0f1e14 0%, #0a120c 55%, var(--bg-void) 100%); }
+  .mood-wedding{ background: radial-gradient(circle at 50% 35%, #1e1818 0%, #100c0c 55%, var(--bg-void) 100%); }
+  .mood-midnight{ background: radial-gradient(circle at 50% 60%, #0c0c1e 0%, #060609 60%, var(--bg-void) 100%); }
+  .mood-field{ background: radial-gradient(circle at 50% 45%, #1a2010 0%, #0e1208 55%, var(--bg-void) 100%); }
+
+  /* --- title screen --- */
+  #title-screen{
+    position:fixed; inset:0; z-index:10; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center; padding:8vh 6vw;
+    background: radial-gradient(circle at 50% 30%, rgba(32,17,28,0.88) 0%, rgba(10,5,7,0.97) 70%);
+  }
+  .eyebrow{ letter-spacing:.32em; font-size:.68rem; color:var(--amber); text-transform:uppercase; opacity:.85; }
+  h1.title{
+    font-size: clamp(2.2rem, 9vw, 3.4rem); margin:.4em 0 .1em; line-height:1.05;
+    color:var(--paper); text-shadow:0 0 24px rgba(196,38,79,0.35);
+  }
+  .subtitle{ color:var(--violet); font-style:italic; font-size:1rem; margin-bottom:2.2rem; }
+
+  .pin-icon{ width:120px; height:140px; margin:1rem 0 2.4rem; position:relative; }
+  .pin-icon::after{
+    content:''; position:absolute; bottom:-4px; left:50%; transform:translateX(-50%);
+    width:74px; height:16px; border-radius:50%;
+    background:radial-gradient(ellipse, rgba(0,0,0,.55) 0%, transparent 72%);
+  }
+  .wing{ position:absolute; top:38px; width:46px; height:62px; background:linear-gradient(160deg, var(--violet) 0%, var(--violet-deep) 100%);
+    border-radius:60% 40% 70% 30%/55% 45% 65% 35%; opacity:.92; filter:drop-shadow(0 0 10px rgba(138,74,120,.5));}
+  .wing.l{ left:6px; transform-origin:right center; animation:flutterL 2.6s ease-in-out infinite; }
+  .wing.r{ right:6px; transform-origin:left center; animation:flutterR 2.6s ease-in-out infinite; }
+  @keyframes flutterL{ 0%,100%{ transform:rotate(-6deg) scaleX(1);} 50%{ transform:rotate(-22deg) scaleX(.86);} }
+  @keyframes flutterR{ 0%,100%{ transform:rotate(6deg) scaleX(1);} 50%{ transform:rotate(22deg) scaleX(.86);} }
+  .needle{ position:absolute; left:50%; top:18px; width:2px; height:104px; background:linear-gradient(#cfc9c2,#8d877f); transform:translateX(-50%); box-shadow:0 0 4px rgba(0,0,0,.6); }
+  .drop{ position:absolute; left:50%; top:120px; width:6px; height:9px; background:var(--blood-bright); border-radius:50% 50% 50% 0; transform:translateX(-50%) rotate(45deg); animation: drip 2.6s ease-in infinite; opacity:0; }
+  @keyframes drip{ 0%{ opacity:0; top:120px;} 8%{opacity:.9;} 70%{ opacity:.7; top:172px;} 100%{ opacity:0; top:180px;} }
+
+  button.cta{
+    font-family:'Be Vietnam Pro', sans-serif; font-weight:600; letter-spacing:.06em;
+    background:transparent; color:var(--paper); border:1px solid var(--amber);
+    padding:.85em 2.2em; border-radius:2px; font-size:.95rem; cursor:pointer;
+    transition: all .25s ease; text-transform:uppercase;
+  }
+  button.cta:hover, button.cta:focus-visible{ background:var(--amber); color:#1a1108; }
+  button.cta:active{ transform:scale(.97); }
+  .hint{ margin-top:1.6rem; font-size:.74rem; color:var(--text-dim); max-width:280px; }
+
+  /* Chapter select on title */
+  #chapter-menu{ display:none; flex-direction:column; gap:.5rem; margin-top:1.2rem; max-height:40vh; overflow-y:auto; width:100%; max-width:340px; }
+  #chapter-menu.show{ display:flex; }
+  .ch-btn{
+    font-family:'Be Vietnam Pro', sans-serif; text-align:left; background:rgba(255,255,255,0.02);
+    border:1px solid var(--line); color:var(--text-dim); padding:.65em 1em; border-radius:6px;
+    font-size:.82rem; cursor:pointer; transition: all .2s ease;
+  }
+  .ch-btn:hover{ border-color:var(--amber); color:var(--paper); background:rgba(214,161,74,0.08); }
+  .toggle-chapters{ background:none; border:none; color:var(--text-dim); font-size:.75rem; letter-spacing:.1em; cursor:pointer; margin-top:.5rem; text-decoration:underline; text-underline-offset:3px; }
+
+  /* --- game screen --- */
+  #game-screen{ position:fixed; inset:0; z-index:6; display:flex; flex-direction:column; }
+  #topbar{
+    position:relative; z-index:7; display:flex; align-items:center; justify-content:space-between;
+    padding: max(14px, env(safe-area-inset-top)) 18px 10px;
+    font-size:.62rem; letter-spacing:.22em; text-transform:uppercase; color:var(--text-dim);
+  }
+  #chapter-label{ transition:opacity .4s ease; }
+  #controls{ display:flex; gap:.4rem; }
+  .icon-btn{
+    background:none; border:1px solid var(--line); color:var(--text-dim); border-radius:6px;
+    width:32px; height:30px; font-size:.9rem; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; padding:0; line-height:1;
+  }
+  .icon-btn.active{ border-color:var(--amber); color:var(--amber); background:rgba(214,161,74,0.1); }
+  .icon-btn:active{ transform:scale(.93); }
+
+  #dialog-wrap{ margin-top:auto; position:relative; z-index:7; padding:0 4vw max(16px, env(safe-area-inset-bottom)); }
+  #dialog-panel{
+    background:var(--panel); border-top:1px solid var(--line);
+    border-radius:14px 14px 0 0; padding:1.3rem 1.4rem 1.1rem;
+    backdrop-filter: blur(6px); min-height:30vh; display:flex; flex-direction:column;
+    box-shadow:0 -10px 40px rgba(0,0,0,.5); position:relative;
+  }
+  #dialog-panel::before{
+    content:''; position:absolute; top:0; left:14%; right:14%; height:1px;
+    background:linear-gradient(90deg, transparent, var(--amber), transparent); opacity:.55;
+  }
+  #speaker{
+    font-size:.78rem; letter-spacing:.1em; color:var(--amber); margin-bottom:.5rem; min-height:1em;
+    text-transform:uppercase; font-weight:600; display:flex; align-items:center; gap:.4rem;
+  }
+  #speaker:not(:empty)::before{
+    content:''; display:inline-block; width:6px; height:6px; border-radius:50%;
+    background:var(--blood-bright); box-shadow:0 0 6px var(--blood-bright);
+  }
+  #dialog-text{
+    font-size:1.05rem; line-height:1.62; color:var(--paper); flex:1;
+    min-height:5.2em;
+  }
+  #continue-row{ display:flex; justify-content:flex-end; align-items:center; margin-top:.6rem; min-height:1.6rem; }
+  #continue-indicator{
+    font-size:.78rem; color:var(--text-dim); letter-spacing:.05em; opacity:0; transition:opacity .3s ease;
+    display:flex; align-items:center; gap:.4rem;
+  }
+  #continue-indicator.show{ opacity:1; animation:bob 1.4s ease-in-out infinite; }
+  @keyframes bob{ 0%,100%{ transform:translateX(0);} 50%{ transform:translateX(5px);} }
+
+  #choices{ display:flex; flex-direction:column; gap:.6rem; margin-top:.8rem; }
+  #choices.hidden{ display:none; }
+  .choice-btn{
+    font-family:'Be Vietnam Pro', sans-serif; text-align:left; background:rgba(255,255,255,0.02);
+    border:1px solid var(--line); color:var(--paper); padding:.85em 1.1em; border-radius:8px;
+    font-size:.96rem; cursor:pointer; transition: all .2s ease; line-height:1.4;
+  }
+  .choice-btn:hover, .choice-btn:focus-visible{ border-color:var(--amber); background:rgba(214,161,74,0.08); }
+  .choice-btn:active{ transform:scale(.985); }
+  .choice-btn .num{ color:var(--violet); margin-right:.5em; font-style:italic; }
+
+  #tap-zone{ position:absolute; inset:0; z-index:6; }
+
+  /* --- end screen --- */
+  #end-screen{
+    position:fixed; inset:0; z-index:20; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; text-align:center; padding:8vh 7vw; background:rgba(8,4,6,0.96);
+  }
+  #end-screen.hidden{ display:none; }
+  #end-title{ font-size:1.5rem; color:var(--amber); margin-bottom:.8rem; }
+  #end-body{ color:var(--text-dim); line-height:1.7; font-size:.95rem; max-width:340px; margin-bottom:2rem; }
+
+  /* progress bar */
+  #progress-bar{
+    position:fixed; top:0; left:0; height:2px; background:var(--blood-bright); z-index:8;
+    transition: width 0.4s ease; width:0%;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .wing, .drop, #continue-indicator.show, .shake{ animation:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="fx"></canvas>
+<div id="stage"></div>
+<div id="progress-bar"></div>
+
+<svg id="scene-art" viewBox="0 0 400 800" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+  <!-- art-forest -->
+  <g id="art-forest" class="art-group">
+    <g class="godray" opacity="0.12">
+      <polygon points="110,0 190,0 50,800 -30,800" fill="#d6a14a"/>
+      <polygon points="270,0 350,0 470,800 350,800" fill="#d6a14a"/>
+    </g>
+    <g opacity="0.5" fill="#0d1810">
+      <path d="M0 800 L40 660 L80 800 Z"/><path d="M60 800 L120 600 L180 800 Z"/>
+      <path d="M220 800 L270 640 L320 800 Z"/><path d="M300 800 L360 670 L400 800 Z"/>
+    </g>
+    <g class="fly-butterfly">
+      <ellipse cx="-6" cy="0" rx="9" ry="13" fill="#8a4a78" opacity="0.85"/>
+      <ellipse cx="6" cy="0" rx="9" ry="13" fill="#8a4a78" opacity="0.85"/>
+      <rect x="-1" y="-9" width="2" height="18" fill="#2a1726"/>
+    </g>
+  </g>
+
+  <!-- art-fire -->
+  <g id="art-fire" class="art-group">
+    <g transform="translate(140,800)">
+      <path class="flame" d="M0 0 C-22 -40 -10 -70 0 -120 C10 -70 22 -40 0 0 Z" fill="#c4264f" opacity="0.8"/>
+    </g>
+    <g transform="translate(220,800)">
+      <path class="flame" d="M0 0 C-18 -50 -6 -90 0 -150 C6 -90 18 -50 0 0 Z" fill="#d6a14a" opacity="0.7"/>
+    </g>
+    <g transform="translate(280,800)">
+      <path class="flame" d="M0 0 C-16 -35 -8 -60 0 -100 C8 -60 16 -35 0 0 Z" fill="#c4264f" opacity="0.75"/>
+    </g>
+  </g>
+
+  <!-- art-pin -->
+  <g id="art-pin" class="art-group">
+    <g transform="translate(200,330)">
+      <rect x="-14" y="-90" width="28" height="220" rx="6" fill="#241410" opacity="0.6"/>
+      <g class="pin-wing-art">
+        <ellipse cx="-32" cy="-10" rx="34" ry="48" fill="#5c0d24" opacity="0.85"/>
+        <ellipse cx="32" cy="-10" rx="34" ry="48" fill="#5c0d24" opacity="0.85"/>
+        <ellipse cx="-30" cy="40" rx="24" ry="34" fill="#3c0a18" opacity="0.85"/>
+        <ellipse cx="30" cy="40" rx="24" ry="34" fill="#3c0a18" opacity="0.85"/>
+      </g>
+      <rect x="-3" y="-58" width="6" height="116" fill="#1a0f0c"/>
+      <circle cx="-58" cy="-30" r="3" fill="#c9c2b8"/><circle cx="58" cy="-30" r="3" fill="#c9c2b8"/>
+      <circle cx="-52" cy="58" r="3" fill="#c9c2b8"/><circle cx="52" cy="58" r="3" fill="#c9c2b8"/>
+      <g fill="#c4264f">
+        <rect class="blood-drip" x="-1" y="64" width="3" height="10" rx="1"/>
+        <rect class="blood-drip" x="34" y="74" width="3" height="10" rx="1"/>
+        <rect class="blood-drip" x="-36" y="74" width="3" height="10" rx="1"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- art-spirit -->
+  <g id="art-spirit" class="art-group">
+    <g class="godray" opacity="0.10">
+      <polygon points="60,0 130,0 -40,800 -110,800" fill="#8a4a78"/>
+      <polygon points="300,0 370,0 470,800 400,800" fill="#d6a14a"/>
+    </g>
+    <g class="branch" transform="translate(60,140)">
+      <path d="M0 0 C40 10 80 30 110 60" stroke="#4a2f44" stroke-width="4" fill="none" opacity="0.6"/>
+      <circle cx="40" cy="14" r="5" fill="#d6a14a" opacity="0.6"/>
+      <circle cx="78" cy="34" r="5" fill="#d6a14a" opacity="0.55"/>
+      <circle cx="105" cy="56" r="5" fill="#d6a14a" opacity="0.6"/>
+    </g>
+    <circle class="lantern" cx="320" cy="180" r="26" fill="#d6a14a" opacity="0.65"/>
+  </g>
+
+  <!-- art-city -->
+  <g id="art-city" class="art-group">
+    <g fill="#0c1018" opacity="0.85">
+      <rect x="0" y="560" width="50" height="240"/><rect x="55" y="500" width="40" height="300"/>
+      <rect x="100" y="600" width="60" height="200"/><rect x="165" y="460" width="35" height="340"/>
+      <rect x="205" y="540" width="55" height="260"/><rect x="265" y="420" width="45" height="380"/>
+      <rect x="315" y="580" width="50" height="220"/><rect x="370" y="500" width="30" height="300"/>
+    </g>
+    <g fill="#d6a14a">
+      <rect class="win" x="14" y="600" width="6" height="8"/><rect class="win" x="30" y="640" width="6" height="8"/>
+      <rect class="win" x="70" y="540" width="6" height="8"/><rect class="win" x="120" y="650" width="6" height="8"/>
+      <rect class="win" x="180" y="500" width="6" height="8"/><rect class="win" x="280" y="460" width="6" height="8"/>
+      <rect class="win" x="330" y="620" width="6" height="8"/><rect class="win" x="380" y="540" width="6" height="8"/>
+      <rect class="win" x="40" y="560" width="6" height="8"/><rect class="win" x="230" y="600" width="6" height="8"/>
+    </g>
+  </g>
+
+  <!-- art-rain -->
+  <g id="art-rain" class="art-group">
+    <g fill="#070a10" opacity="0.92">
+      <rect x="0" y="580" width="50" height="220"/><rect x="55" y="520" width="40" height="280"/>
+      <rect x="100" y="610" width="60" height="190"/><rect x="165" y="480" width="35" height="320"/>
+      <rect x="205" y="560" width="55" height="240"/><rect x="265" y="440" width="45" height="360"/>
+      <rect x="315" y="600" width="50" height="200"/><rect x="370" y="520" width="30" height="280"/>
+    </g>
+    <g fill="#8a8060" opacity="0.4">
+      <rect class="win" x="70" y="560" width="6" height="8"/><rect class="win" x="280" y="480" width="6" height="8"/>
+      <rect class="win" x="330" y="640" width="6" height="8"/>
+    </g>
+    <circle class="lantern" cx="200" cy="560" r="38" fill="#d6a14a" opacity="0.16"/>
+    <line x1="200" y1="560" x2="200" y2="800" stroke="#0c0a08" stroke-width="4"/>
+    <ellipse cx="200" cy="800" rx="64" ry="10" fill="#d6a14a" opacity="0.1"/>
+  </g>
+
+  <!-- art-threshold -->
+  <g id="art-threshold" class="art-group">
+    <rect x="140" y="260" width="120" height="320" rx="10" fill="#0d0805" opacity="0.85"/>
+    <rect class="crack" x="196" y="270" width="8" height="300" fill="#f3d9a4"/>
+  </g>
+
+  <!-- art-ash -->
+  <g id="art-ash" class="art-group">
+    <g opacity="0.4" fill="#2a2028">
+      <circle cx="80" cy="700" r="60"/><circle cx="250" cy="720" r="80"/><circle cx="380" cy="680" r="50"/>
+    </g>
+    <rect x="0" y="760" width="400" height="40" fill="#1a1416" opacity="0.7"/>
+  </g>
+
+  <!-- art-hospital (ch4: bệnh viện, màu xanh lạnh) -->
+  <g id="art-hospital" class="art-group">
+    <rect x="80" y="200" width="240" height="400" rx="4" fill="#081414" opacity="0.8"/>
+    <g fill="#3a8a8a" opacity="0.3">
+      <rect x="100" y="240" width="40" height="50" rx="2"/><rect x="160" y="240" width="40" height="50" rx="2"/>
+      <rect x="220" y="240" width="40" height="50" rx="2"/>
+      <rect x="100" y="310" width="40" height="50" rx="2"/><rect x="220" y="310" width="40" height="50" rx="2"/>
+    </g>
+    <!-- cross -->
+    <rect x="188" y="380" width="24" height="60" fill="#3a8a8a" opacity="0.4"/>
+    <rect x="172" y="396" width="56" height="24" fill="#3a8a8a" opacity="0.4"/>
+    <g class="bubble">
+      <circle cx="200" cy="550" r="8" fill="none" stroke="#3a8a8a" stroke-width="1.5" opacity="0.5"/>
+    </g>
+    <g class="bubble" style="animation-delay:2s">
+      <circle cx="160" cy="580" r="5" fill="none" stroke="#3a8a8a" stroke-width="1" opacity="0.4"/>
+    </g>
+    <g class="bubble" style="animation-delay:4s">
+      <circle cx="240" cy="570" r="6" fill="none" stroke="#3a8a8a" stroke-width="1" opacity="0.45"/>
+    </g>
+  </g>
+
+  <!-- art-snow (ch4: đêm đông) -->
+  <g id="art-snow" class="art-group">
+    <g fill="#070a10" opacity="0.85">
+      <rect x="0" y="570" width="50" height="230"/><rect x="55" y="510" width="40" height="290"/>
+      <rect x="265" y="430" width="45" height="370"/><rect x="315" y="590" width="50" height="210"/>
+    </g>
+    <circle class="moon" cx="310" cy="80" r="38" fill="#b0b8c8" opacity="0.35"/>
+    <g fill="#b0b8c8">
+      <circle class="snowflake" cx="60" cy="0" r="2" opacity="0.6"/>
+      <circle class="snowflake" cx="180" cy="-40" r="1.5" opacity="0.5"/>
+      <circle class="snowflake" cx="300" cy="-20" r="2.5" opacity="0.55"/>
+    </g>
+  </g>
+
+  <!-- art-park (ch5,6: công viên ngày) -->
+  <g id="art-park" class="art-group">
+    <g class="godray" opacity="0.08">
+      <polygon points="80,0 160,0 20,800 -60,800" fill="#6ab04a"/>
+      <polygon points="260,0 340,0 430,800 350,800" fill="#d6a14a"/>
+    </g>
+    <g opacity="0.5" fill="#0d1a0a">
+      <path d="M0 800 L30 680 L60 800 Z"/>
+      <path d="M50 800 L110 580 L170 800 Z"/>
+      <path d="M240 800 L280 650 L320 800 Z"/>
+      <path d="M330 800 L380 690 L400 800 Z"/>
+    </g>
+    <g class="fly-butterfly" style="animation-duration:14s">
+      <ellipse cx="-7" cy="0" rx="10" ry="14" fill="#7a4a68" opacity="0.75"/>
+      <ellipse cx="7" cy="0" rx="10" ry="14" fill="#7a4a68" opacity="0.75"/>
+      <rect x="-1.5" y="-10" width="3" height="20" fill="#2a1726"/>
+    </g>
+  </g>
+
+  <!-- art-wedding (ch7: lễ đường) -->
+  <g id="art-wedding" class="art-group">
+    <!-- candles -->
+    <g fill="#c8c0b0" opacity="0.5">
+      <rect x="70" y="600" width="12" height="80" rx="6"/>
+      <rect x="318" y="600" width="12" height="80" rx="6"/>
+    </g>
+    <g class="lantern">
+      <ellipse cx="76" cy="598" rx="6" ry="8" fill="#d6a14a" opacity="0.9"/>
+      <ellipse cx="324" cy="598" rx="6" ry="8" fill="#d6a14a" opacity="0.9"/>
+    </g>
+    <!-- arch -->
+    <path d="M100 800 Q200 400 300 800" stroke="#3c1f37" stroke-width="3" fill="none" opacity="0.6"/>
+    <!-- petals -->
+    <g fill="#c4264f" opacity="0.3">
+      <ellipse cx="130" cy="700" rx="6" ry="3" transform="rotate(-20 130 700)"/>
+      <ellipse cx="230" cy="720" rx="5" ry="2.5" transform="rotate(10 230 720)"/>
+      <ellipse cx="290" cy="690" rx="7" ry="3" transform="rotate(-35 290 690)"/>
+      <ellipse cx="170" cy="750" rx="4" ry="2" transform="rotate(15 170 750)"/>
+    </g>
+  </g>
+
+  <!-- art-midnight (ch8,9: đêm khuya bí ẩn) -->
+  <g id="art-midnight" class="art-group">
+    <circle class="moon" cx="320" cy="70" r="50" fill="#b0b8c8" opacity="0.25"/>
+    <g class="ring" transform="translate(320,70)">
+      <circle cx="0" cy="0" r="65" fill="none" stroke="#b0b8c8" stroke-width="0.8" stroke-dasharray="4 8" opacity="0.2"/>
+    </g>
+    <!-- flying crane (hạc giấy) representing origami cranes ch9 -->
+    <g class="crane" transform="translate(100,200)">
+      <polygon points="0,-20 -18,10 0,4 18,10" fill="#d6a14a" opacity="0.5"/>
+      <polygon points="0,-20 -12,-5 0,-12 12,-5" fill="#ece2d3" opacity="0.3"/>
+    </g>
+    <g class="crane" transform="translate(260,300)" style="animation-delay:1.5s">
+      <polygon points="0,-16 -14,8 0,3 14,8" fill="#d6a14a" opacity="0.4"/>
+    </g>
+    <g fill="#070a10" opacity="0.85">
+      <rect x="0" y="590" width="40" height="210"/><rect x="45" y="530" width="35" height="270"/>
+      <rect x="270" y="450" width="45" height="350"/><rect x="330" y="600" width="45" height="200"/>
+    </g>
+  </g>
+
+  <!-- art-field (ch10: epilogue, cánh đồng) -->
+  <g id="art-field" class="art-group">
+    <g class="godray" opacity="0.18">
+      <polygon points="100,0 200,0 60,800 -40,800" fill="#d6a14a"/>
+      <polygon points="260,0 340,0 440,800 360,800" fill="#c4264f" opacity="0.5"/>
+    </g>
+    <!-- ground -->
+    <rect x="0" y="640" width="400" height="160" fill="#0e1208" opacity="0.8"/>
+    <!-- grass -->
+    <g stroke="#2a4a1a" stroke-width="1.5" opacity="0.5">
+      <line x1="30" y1="640" x2="20" y2="610"/><line x1="50" y1="640" x2="45" y2="605"/>
+      <line x1="90" y1="640" x2="85" y2="612"/><line x1="140" y1="640" x2="132" y2="608"/>
+      <line x1="200" y1="640" x2="194" y2="606"/><line x1="260" y1="640" x2="268" y2="610"/>
+      <line x1="320" y1="640" x2="315" y2="607"/><line x1="370" y1="640" x2="378" y2="614"/>
+    </g>
+    <!-- heart (sứ mệnh tình yêu) -->
+    <g class="heart" transform="translate(200,360)">
+      <path d="M0,8 C-20,-8 -36,-8 -36,6 C-36,22 -20,30 0,44 C20,30 36,22 36,6 C36,-8 20,-8 0,8 Z" fill="#c4264f" opacity="0.35"/>
+    </g>
+    <!-- butterfly pair -->
+    <g transform="translate(160,480)">
+      <ellipse cx="-7" cy="0" rx="10" ry="14" fill="#8a4a78" opacity="0.6"/>
+      <ellipse cx="7" cy="0" rx="10" ry="14" fill="#8a4a78" opacity="0.6"/>
+      <rect x="-1.5" y="-10" width="3" height="20" fill="#2a1726"/>
+    </g>
+    <g transform="translate(240,500)">
+      <ellipse cx="-6" cy="0" rx="8" ry="12" fill="#d6a14a" opacity="0.5"/>
+      <ellipse cx="6" cy="0" rx="8" ry="12" fill="#d6a14a" opacity="0.5"/>
+      <rect x="-1" y="-8" width="2" height="16" fill="#2a1726"/>
+    </g>
+  </g>
+</svg>
+
+<div id="vignette"></div>
+<div id="grain"></div>
+<div id="cutveil"></div>
+<div id="rgb-glitch"></div>
+<div id="flash"></div>
+
+<!-- TITLE -->
+<section id="title-screen">
+  <div class="eyebrow">Truyện kinh dị · Võ Anh Thơ</div>
+  <h1 class="title serif">Bướm Báo Thù</h1>
+  <div class="subtitle">Điệp Tử — Toàn bộ 10 chương</div>
+  <div class="pin-icon">
+    <div class="needle"></div>
+    <div class="wing l"></div>
+    <div class="wing r"></div>
+    <div class="drop"></div>
+  </div>
+  <button class="cta" id="start-btn">Đọc từ đầu</button>
+  <button class="toggle-chapters" id="toggle-ch-btn">— hoặc chọn chương —</button>
+  <div id="chapter-menu">
+    <button class="ch-btn" data-node="n1">Chương 1 · Khởi đầu — Khu rừng thiêng</button>
+    <button class="ch-btn" data-node="n61">Chương 2 · Người tình — Ông Quốc &amp; Thu</button>
+    <button class="ch-btn" data-node="ch3_start">Chương 2 (tt) · Nhẫn cưới — Phan &amp; Hạnh</button>
+    <button class="ch-btn" data-node="ch3b_start">Chương 3 · Bà nội — Gia đình Thùy</button>
+    <button class="ch-btn" data-node="ch4_start">Chương 4 · Em gái — Vĩ &amp; Hương</button>
+    <button class="ch-btn" data-node="ch5_start">Chương 5 · Ác mộng — Tiệt &amp; Điệp Tử</button>
+    <button class="ch-btn" data-node="ch6_start">Chương 6 · Ba dượng — Bích &amp; gia đình</button>
+    <button class="ch-btn" data-node="ch7_start">Chương 7 · Con nuôi — Nhà ông Tùng</button>
+    <button class="ch-btn" data-node="ch8_start">Chương 8 · Bạn mới — Hữu Lập &amp; Tâm Khả</button>
+    <button class="ch-btn" data-node="ch9_start">Chương 9 · Chân tướng — Mạnh Khôi lộ mặt</button>
+    <button class="ch-btn" data-node="ch10_start">Chương 10 · Sứ mệnh — Hồi kết</button>
+  </div>
+  <p class="hint">Chuyển thể tương tác toàn bộ truyện. Chạm khung chữ để đọc tiếp. Thanh tiến độ ở trên cùng hiển thị vị trí trong câu chuyện.</p>
+</section>
+
+<!-- GAME -->
+<section id="game-screen" hidden>
+  <div id="topbar">
+    <span id="chapter-label">CHƯƠNG 1 · KHU RỪNG</span>
+    <div id="controls">
+      <button id="sound-btn" class="icon-btn active" aria-label="Bật/tắt âm thanh">🔊</button>
+      <button id="voice-btn" class="icon-btn" aria-label="Bật/tắt giọng đọc">🗣️</button>
+      <button id="restart-btn" class="icon-btn" aria-label="Về đầu">⟲</button>
+    </div>
+  </div>
+  <div id="dialog-wrap">
+    <div id="dialog-panel">
+      <div id="speaker"></div>
+      <div id="dialog-text"></div>
+      <div id="continue-row"><span id="continue-indicator">chạm để tiếp ›</span></div>
+      <div id="choices" class="hidden"></div>
+    </div>
+  </div>
+  <div id="tap-zone"></div>
+</section>
+
+<!-- END -->
+<section id="end-screen" class="hidden">
+  <div class="eyebrow" id="end-eyebrow">Kết cục</div>
+  <div id="end-title" class="serif"></div>
+  <div id="end-body"></div>
+  <button class="cta" id="end-restart-btn">Chơi lại từ đầu</button>
+</section>
+
+<script>
+/* ============ STORY DATA — FULL 10 CHAPTERS ============ */
+const NODES = {
+/* ===== CH1: KHU RỪNG ===== */
+n1:{ section:"CHƯƠNG 1 · KHU RỪNG", mood:"forest", text:`Có một cánh rừng chưa từng in dấu chân người — nơi cây cỏ tốt tươi đến lạ, nắng xuyên từng kẽ lá cổ thụ, bướm chao lượn không ngớt. Một góc địa đàng còn sót lại giữa trần gian, như chưa bao giờ biết đến bàn tay con người.`, next:"n2" },
+n2:{ mood:"forest", text:`Cho đến một buổi chiều đầu xuân. Tiếng máy nổ xé toạc sự tĩnh lặng ngàn năm — một chiếc thuyền cập bến, mang theo bảy kẻ lạ. Bảy con người, bảy số phận, và một quyết định sẽ khơi dậy thứ không thể dập tắt.`, next:"n3" },
+n3:{ mood:"forest", speaker:"Người đàn ông râu rậm", text:`– Đẹp thế này mà chẳng ai bén mảng tới bao giờ, lạ thật đấy.`, next:"n4" },
+n4:{ mood:"forest", speaker:"Người phụ nữ đeo kính", text:`– Ông không biết thôi. Đảo này đồn không lành — cây cỏ, sâu bọ ở đây có khẩu phần ăn chẳng giống nơi nào cả.`, next:"n5" },
+n5:{ mood:"forest", speaker:"Người tóc hai màu", text:`– Lấy con bướm làm ví dụ. Bình thường hóa bướm xong thì chỉ lo tìm bạn tình rồi chết, có ăn gì đâu. Nhưng bướm ở đây thì khác — chúng ăn cả đồng loại, để sống dai hơn, tuổi thọ dài hơn loài thường.`, next:"n6" },
+n6:{ mood:"forest", speaker:"Người mặc áo khoác dày", text:`– Bớt tám đi! Khảo sát cho lẹ còn về báo để người ta đưa thợ tới san phẳng chỗ này dựng khu vui chơi mừng sinh nhật cậu ấm nhà sếp. Này — lề mề gì đó, mang đồ lên mau!`, next:"n7" },
+n7:{ mood:"forest", text:`Nhóm người tản vào rừng. Không ai trong số họ biết, chỉ ít phút nữa thôi, một thảm kịch sẽ bắt đầu — từ một cánh bướm tím còn rất trẻ, rất rực rỡ, đang bay về phía một bông hoa xanh.`, next:"n8" },
+n8:{ mood:"forest", text:`Bướm Tím mới lớn, đôi cánh tím biếc còn rực rỡ sức sống. Nàng sà xuống bông hoa xanh vừa hé nở — bữa chiều có vẻ ngon lành.`, next:"n9" },
+n9:{ mood:"forest", speaker:"Chú bé hoa", text:`– Ai... ai đang đậu trên tôi vậy?`, next:"n10" },
+n10:{ mood:"forest", speaker:"Bướm Tím", text:`– Ta đây, Bướm Tím. Bụng ta đang réo, định ăn ngươi đấy.`, next:"n11" },
+n11:{ mood:"forest", speaker:"Chú bé hoa", text:`– Đừng ăn tôi mà! Tôi mới nở được mấy hôm, tôi còn muốn sống thêm nữa... khó khăn lắm tôi mới nở ra được thế này!`, next:"n12" },
+n12:{ mood:"forest", speaker:"Bướm Tím", text:`– Mới nở thì cũng đã được tắm nắng, nghe gió, uống sương rồi còn gì. Vậy là đủ cho một kiếp hoa vô vị. Nằm yên, để ta ăn.`, next:"n13" },
+n13:{ mood:"forest", text:`Mặc tiếng van xin nức nở, Bướm Tím nuốt trọn bông hoa mới nở ấy vào bụng. Đó là thứ nàng không thể biết — rằng hành động tàn nhẫn này, và thứ sắp đến, sẽ gắn kết hai linh hồn ấy mãi về sau.`, next:"n14" },
+n14:{ mood:"fire", text:`Về đến tổ, nàng chết lặng: cả nhà bướm tím đã bị giết sạch. Những xác bướm nằm la liệt. Chưa kịp hiểu chuyện gì, một tấm lưới chụp xuống, siết chặt lấy nàng trong bóng tay người.`, next:"n15" },
+n15:{ mood:"fire", speaker:"Người phụ nữ đeo kính", text:`– Ơ, còn sót một con sống nè. Làm gì với nó bây giờ?`, next:"n16" },
+n16:{ mood:"fire", text:`Bướm Tím chới với trong lưới. Gần đó, những khung kính bày la liệt xác bướm khô — bị ghim cứng, cánh xòe rộng như tiêu bản. Nàng hiểu ra: đây là con người. Và con người đang xem nàng như một món đồ vật.`, next:"n17" },
+n17:{ mood:"fire", speaker:"Người phụ nữ đeo kính", text:`– Không có bật lửa thì dùng diêm vậy.`, next:"n18" },
+n18:{ mood:"fire", fx:"flash", text:`Que diêm xoẹt sáng, rơi xuống đống cỏ khô dưới gốc cây — nơi từng là tổ ấm của Bướm Tím và cả gia đình nàng. Lửa bén nhanh, bốc cao ngùn ngụt, sắc đỏ tươi rói giữa rừng xanh.`, next:"n19" },
+n19:{ mood:"fire", fx:"shake", speaker:"Bướm Tím", text:`– Đừng... đừng đốt nhà tôi! Làm ơn!`, next:"n20" },
+n20:{ mood:"fire", text:`Nhưng tiếng kêu của một con bướm, loài người nào nghe thấu. Ngọn lửa nuốt chửng cả khoảnh rừng trong tích tắc. Không dừng ở đó — lửa điên cuồng tiếp tục tàn phá mọi thứ xung quanh.`, next:"n21" },
+n21:{ mood:"pin", speaker:"Người đàn ông râu rậm", text:`– Đôi cánh đẹp thật, tiếc là hoa văn nhìn chưa rõ.`, next:"n22" },
+n22:{ mood:"pin", speaker:"Người tóc hai màu", text:`– Chuyện nhỏ. Đưa đây, tôi có cách cho mấy người thấy rõ hơn.`, next:"n23" },
+n23:{ mood:"pin", fx:"shake", text:`Gã vứt điếu thuốc, giật lấy búa cùng bốn cây đinh gỉ sét. Quay sang gã thanh niên vụng về cạnh đó, hắn quát: giữ chặt con bướm, đừng để xổng.`, next:"n24" },
+n24:{ mood:"pin", fx:"shake", text:`Đinh đầu tiên xuyên qua cánh. Bướm Tím rú lên, máu nhỏ giọt thấm vào lớp vỏ cây xù xì. Một, hai, ba, rồi cây đinh thứ tư — bốn góc cánh nàng bị ghim chết cứng vào thân gỗ, như cây thập giá thu nhỏ.`, next:"n25" },
+n25:{ mood:"pin", fx:"shake", speaker:"Bướm Tím", text:`– Đau... đau quá... Tôi đau quá!`, next:"n26" },
+n26:{ mood:"pin", text:`Mười mấy con mắt dán chặt lấy đôi cánh đang rỉ máu, trầm trồ trước thứ vẻ đẹp tàn khốc ấy. Đây là Bướm Tím — đáng thương, kiệt sức trong cơn đau khủng khiếp. Bảy tên quái vật...`, next:"n27" },
+n27:{ mood:"ash", speaker:"Người mặc áo khoác dày", text:`– Coi chán rồi thì đốt quách đi. Chúng ta cần đi xem hết khu rừng này trước khi trời tối.`, next:"n28" },
+n28:{ mood:"ash", text:`Họ tản đi, bỏ mặc nàng treo trên thân cây. Bướm Tím nhìn về chân trời, mặt trời đang khuất sau rặng núi — màu cam vàng của hoàng hôn là hình ảnh cuối cùng trước khi ngọn lửa nuốt trọn lấy nàng. Nhưng trong tro tàn, một thứ gì đó rất mãnh liệt đã nhen lên.`, next:"n29" },
+
+/* === CH1: CÕI U MINH === */
+n29:{ section:"CHƯƠNG 1 · CÕI U MINH", mood:"spirit", text:`Tiếng chim hót khẽ vang bên tai. Bướm Tím mở mắt, thấy mình đang nằm trong một căn phòng gỗ nhỏ, ánh sáng nhạt nhòa như nắng chiều sắp tắt. Đây là đâu?`, next:"n30" },
+n30:{ mood:"spirit", speaker:"Bà Bà", text:`– Tỉnh rồi à?`, next:"n31" },
+n31:{ mood:"spirit", speaker:"Bướm Tím", text:`– Bà là ai? Đây là đâu vậy?`, next:"n32" },
+n32:{ mood:"spirit", speaker:"Bà Bà", text:`– Một nơi hoàn toàn tách biệt khỏi trần gian. Con đã chết rồi, biết không?`, next:"n33" },
+n33:{ mood:"spirit", text:`Ký ức về buổi hoàng hôn năm xưa ùa về, rõ như mới hôm qua. Bướm Tím nhớ từng chiếc đinh, từng đốm lửa, từng tiếng cười của bảy kẻ đó. Nàng vẫn còn thấy rợn người.`, next:"n34" },
+n34:{ mood:"spirit", speaker:"Bà Bà", text:`– Cứ gọi ta là Bà Bà thôi. Ta thích cây cỏ, sâu bọ — loài người đâu biết, chúng cũng có linh hồn, và nếu sống tử tế thì vẫn luân hồi chuyển kiếp được như thường.`, next:"n35" },
+n35:{ mood:"spirit", speaker:"Bà Bà", text:`– Ta đưa hồn con về đây để giúp con thực hiện mong ước của bản thân. Ra ngoài kia mà xem — rồi con sẽ thấy.`, next:"n36" },
+n36:{ mood:"spirit", text:`Bướm Tím bước ra hành lang gỗ. Một khu vườn hiện ra — hoa nở rộ, bướm lượn, suối chảy róc rách dưới gốc cổ thụ, tất cả nhuốm sắc hoàng hôn dịu dàng. Những thứ nàng từng biết, giờ đây được hồi sinh.`, next:"n37" },
+n37:{ mood:"spirit", speaker:"Bà Bà", text:`– Những gì con thấy đều là linh hồn cả. Ta hồi sinh chúng, cho chúng được sống thêm một lần — và tự chọn lấy con đường của mình.`, next:"n38" },
+n38:{ mood:"spirit", speaker:"Bướm Tím", text:`– Vậy nghĩa là... giờ con có thể làm bất cứ điều gì con muốn?`, next:"n39" },
+n39:{ mood:"spirit", speaker:"Bà Bà", text:`– Đúng vậy. Ta không khuyên, cũng chẳng cản. Chỉ có điều, ở đời, gieo nhân nào thì gặt quả nấy. Điều duy nhất ta có thể làm là khi nào con cô đơn, cần người tâm sự, cứ về đây tìm ta.`, next:"n40" },
+n40:{ mood:"spirit", text:`Trong lòng Bướm Tím, một câu hỏi cồn cào không ngớt: giờ đây, nàng thật sự muốn điều gì?`,
+  choices:[
+    { label:"Trả thù. Đó là tất cả những gì ta còn lại.", next:"n41" },
+    { label:"Buông hết, xin được đầu thai bình yên.", next:"end_letgo" }
+  ] },
+n41:{ mood:"spirit", speaker:"Bướm Tím", text:`– Trả thù. Đó là điều duy nhất con muốn. Con sẽ không yên nghỉ nếu chưa đòi lại được thứ đã bị cướp mất.`, next:"n42" },
+n42:{ mood:"spirit", speaker:"Bà Bà", text:`– Tùy con thôi. Ta không cổ vũ cũng chẳng ngăn cản. Chỉ nhớ, lúc nào cô đơn quá, cứ quay về đây tìm ta.`, next:"n43" },
+n43:{ mood:"spirit", speaker:"Bướm Tím", text:`– Nhưng con chỉ là linh hồn. Con cần một hình hài — hình hài con người.`, next:"n44" },
+n44:{ mood:"spirit", speaker:"Bà Bà", text:`– Vậy thì đi tìm lấy một thân xác mà nhập vào. Cần thiết thì đổi luôn gương mặt, đỡ phiền phức về sau. Thấy cánh cửa gỗ cạnh giường tre kia không? Mở ra, bước qua — là tới cõi người.`, next:"n45" },
+n45:{ mood:"threshold", fx:"flash", text:`Bướm Tím đặt tay lên cánh cửa, đẩy nhẹ. Phía sau là một con đường nhỏ chìm trong bóng tối — và xa xa, ánh sáng chói gắt cùng tiếng người huyên náo. Nàng bước qua ngưỡng cửa đó, không nhìn lại.`, next:"n46" },
+
+/* === CH1: CÕI NGƯỜI === */
+n46:{ section:"CHƯƠNG 1 · CÕI NGƯỜI", mood:"city", text:`Nàng dấn bước qua từng đoạn đường đông đúc. Người qua kẻ lại tấp nập, vội vã — nhưng chẳng một ai hay biết có một linh hồn đang lặng lẽ bước giữa họ, quan sát tất cả bằng ánh mắt vô hồn.`, next:"n47" },
+n47:{ mood:"city", text:`Ánh mắt nàng dừng lại nơi một cô gái mặc váy hồng, đang gân cổ cãi nhau qua điện thoại, vẻ mặt đầy tức giận và tủi thân. Cô cúp máy, nước mắt lưng tròng, rồi lao thẳng qua đường mà chẳng buồn nhìn lại.`, next:"n48" },
+n48:{ mood:"city", fx:"shake", text:`Rầm! Một chiếc taxi lao tới, đâm thẳng vào cô. Máu loang đỏ mặt đường — ranh giới giữa sống và chết, đôi khi chỉ cách nhau một giây bất cẩn. Tài xế hoảng loạn rồ ga bỏ chạy. Đám đông vây quanh, tiếng còi xe cứu thương rít lên.`, next:"n49" },
+n49:{ mood:"city", text:`Trên xe cứu thương, giữa tiếng hô hấp cấp cứu hỗn loạn, Bướm Tím lặng lẽ đứng nhìn cô gái đang hấp hối bằng ánh mắt vô cảm. Nàng chỉ đang chờ. Đây là cơ hội.`, next:"n50" },
+n50:{ mood:"city", text:`Khi cánh tay cô gái buông thõng, hơi thở cuối cùng tắt lịm, Bướm Tím không chần chừ — nàng nhập hồn vào thân xác còn vương hơi ấm ấy. Người nhân viên y tế ngỡ ngàng bởi cái mở mắt đột ngột của người chết.`, next:"n51" },
+n51:{ mood:"fire", fx:"shake", text:`Tài xế hoảng sợ đến mất lái, xe lao thẳng vào gốc cây ven đường, một tiếng nổ lớn vang lên, ngọn lửa trùm kín cả chiếc xe. Từ trong biển lửa, bóng dáng cô gái áo hồng chậm rãi bước ra — trên trán còn vệt máu, ánh mắt trống rỗng.`, next:"n52" },
+n52:{ mood:"spirit", text:`Trở lại căn nhà gỗ của Bà Bà, nàng đứng trước gương. Làn da mịn màng, gương mặt thanh tú. Một thân xác tuyệt hảo. Nhưng vẫn còn thiếu một thứ — đôi mắt kia chưa phải của nàng.`, next:"n53" },
+n53:{ mood:"spirit", text:`Nàng đưa tay che đôi mắt đen láy của cô gái. Vài giây sau, khi bàn tay hạ xuống, phản chiếu trong gương là đôi mắt màu cam vàng rực — màu của buổi hoàng hôn nhuốm máu năm xưa.`, next:"n54" },
+n54:{ mood:"spirit", text:`Tắm gội bên bờ suối, khoác bộ váy tím thêu hình cánh bướm dài qua gối, mái tóc đen buông dài sau lưng — một dáng vẻ hoàn toàn mới. Và cái tên cũ cũng không còn phù hợp nữa.`, next:"n55" },
+n55:{ mood:"spirit", speaker:"Bà Bà", text:`– Chuẩn bị xong rồi sao?`, next:"n56" },
+n56:{ mood:"spirit", speaker:"Điệp Tử", text:`– Phải. Từ nay, xin hãy gọi tôi là Điệp Tử. Tôi sẽ trở lại dương gian, đòi lại món nợ mà loài người đã gây ra cho tôi.`, next:"n57" },
+n57:{ mood:"threshold", text:`Nói xong, nàng quay gót bước đi. Từ giây phút ấy, cuộc báo thù của Điệp Tử chính thức bắt đầu — một cơn ác mộng mà không một ai trong bảy kẻ năm xưa có thể ngờ tới.`, next:"n58" },
+n58:{ mood:"city", text:`Trong bóng đêm nơi gốc cây công ty, một cậu thiếu niên mái tóc đen bồng bềnh đứng nhìn theo bóng dáng nàng. Trên cổ tay cậu, vòng hạt đen trắng xen kẽ. Cậu thì thầm điều gì đó rất khẽ. Cuộc gặp gỡ ấy, chưa phải lúc này.`, next:"n61" },
+
+/* === CH2: NGƯỜI TÌNH (Quốc - Thu) === */
+n61:{ section:"CHƯƠNG 2 · NGƯỜI TÌNH", mood:"city", text:`Ba năm sau. Một buổi sáng tại công ty Hậu Vinh, không khí nặng nề bao trùm. Việc kinh doanh sa sút, đối tác lần lượt rút lui. Bỗng tiếng quát tháo vọng ra từ phòng giám đốc.`, next:"n62" },
+n62:{ mood:"city", speaker:"Nhân viên trẻ", text:`– Lại chuyện giám đốc cãi nhau với vợ. Quen quá hóa nhàm.`, next:"n63" },
+n63:{ mood:"city", speaker:"Đồng nghiệp", text:`– Biết ông ấy hết tiền rồi mà bà vợ vẫn cứ vung tay mua sắm.`, next:"n64" },
+n64:{ mood:"city", speaker:"Nhân viên cà vạt đỏ", text:`– Các bà chưa nghe à? Hình như bà giám đốc phát hiện chồng ngoại tình rồi đấy. Drama hay lắm đây.`, next:"n65" },
+n65:{ mood:"city", speaker:"Thu", text:`– Hay cái gì mà hay?`, next:"n66" },
+n66:{ mood:"city", text:`Mọi người giật mình quay lại. Người vừa lên tiếng là Thu — nữ thư ký ngoài ba mươi, tóc đen búi cao, đôi môi đỏ, phong thái sắc sảo. Ẩn dưới làn tóc dài là đôi mắt mang sắc cam vàng kỳ lạ — Điệp Tử đã ở đây từ lâu.`, next:"n67" },
+n67:{ mood:"city", speaker:"Thu", text:`– Công ty đang khó khăn mà mấy người còn rảnh ngồi buôn chuyện. Muốn nghỉ việc luôn không?`, next:"n68" },
+n68:{ mood:"city", text:`Đám nhân viên cuống cuồng xin lỗi, Thu lạnh lùng bỏ đi, để lại sau lưng những ánh mắt dè chừng. Mỗi bước đi của nàng đều có tính toán — mỗi lời nói đều phục vụ mục đích tối thượng.`, next:"n69" },
+n69:{ mood:"city", text:`Một mình bước dọc hành lang vắng, Thu khẽ mỉm cười: "Sớm muộn gì cái công ty thối nát này cũng sụp thôi." Ông Quốc — người đàn ông râu rậm năm xưa đứng trên bờ và ra lệnh đốt rừng — giờ đây đang ngồi trong phòng kính kia, chờ số phận của mình.`, next:"n70" },
+n70:{ mood:"city", speaker:"Giám đốc Quốc", text:`– Thu đấy à? Vụ đối tác sao rồi?`, next:"n71" },
+n71:{ mood:"city", speaker:"Thu", text:`– Rất tiếc, tôi đã cố hết sức nhưng từ sau lô hàng đồ chơi bị đánh giá kém chất lượng, chẳng đối tác nào còn muốn hợp tác nữa.`, next:"n72" },
+n72:{ mood:"city", fx:"shake", text:`Ông Quốc đập tay xuống bàn, gằn giọng chửi rủa những kẻ "qua cầu rút ván". Nàng đứng nhìn, lòng không một chút xúc động. Ông ta, cũng như các đối tác, chỉ là những quân cờ.`, next:"n73" },
+n73:{ mood:"city", speaker:"Giám đốc Quốc", text:`– Lúc này tôi chỉ muốn ở bên Smiley cho khuây khỏa thôi. Khổ nỗi, hình như bà vợ đa nghi của tôi đánh hơi được tôi cặp bồ rồi.`, next:"n74" },
+n74:{ mood:"city", speaker:"Thu", text:`– Giám đốc đừng lo. Nghi thì vẫn chỉ là nghi thôi — đã có tôi nghĩ cách thì còn lâu phu nhân mới tìm được cái đuôi của ông.`, next:"n75" },
+n75:{ mood:"city", speaker:"Giám đốc Quốc", text:`– Cô đúng là quân cờ đắc lực của tôi. Tối nay tôi qua chỗ Smiley, phần còn lại nhờ cô lo liệu nhé.`, next:"n76" },
+n76:{ mood:"city", text:`Ông Quốc rời phòng với vẻ hớn hở. Còn lại một mình, Thu khẽ vuốt thành ghế, lẩm bẩm: "Quân cờ cũng có công dụng riêng của nó, thưa giám đốc."`, next:"n77" },
+n77:{ mood:"city", text:`Đêm xuống, Thu nhét xấp hình tư tình của ông Quốc cùng Smiley vào hòm thư nhà bà Đỗ. Rồi cô gọi điện cho bà Đỗ — nói đúng giờ, đúng địa điểm. Bẫy đã đặt xong.`, next:"n78" },
+n78:{ mood:"rain", text:`Mưa đêm đổ xuống. Trong căn phòng công ty, ông Quốc tra tấn Smiley bằng sợi dây nịch, đầu óc đỏ đen vì ghen tuông và thứ gọi là "tự ái đàn ông". Smiley cố thoát thân trong tuyệt vọng.`, next:"n79" },
+n79:{ mood:"rain", fx:"shake", speaker:"Giám đốc Quốc", text:`– Mày sẽ không thoát được đâu! Chết đi, mày đáng chết!`, next:"n80" },
+n80:{ mood:"rain", text:`Sợi dây nịch quấn chặt quanh cổ Smiley. Tiếng vùng vẫy trong tuyệt vọng, rồi tất cả lặng yên. Ông Quốc thả tay ra, nhìn xuống xác người tình trong hoảng loạn, rồi lao chạy ra ngoài dưới màn mưa tầm tã.`, next:"n81" },
+n81:{ mood:"rain", fx:"flash", text:`Chạy đến gần cổng, ông trượt chân ngã trên nền đất ướt. Thứ ướt dưới tay ông, khi soi dưới ánh đèn mờ, hóa ra là máu. Mở cửa lao ra ngoài — đập vào mắt ông là thi thể vợ mình, bà Đỗ, nằm giữa bãi cỏ ướt, bị đâm chết.`, next:"n82" },
+n82:{ mood:"rain", fx:"shake", text:`Không kịp suy nghĩ, ông lao đến rút con dao cắm trên người vợ ra, máu văng đầy mặt, gào lên gọi tên bà. Đúng lúc ấy, xe cảnh sát ập đến. Trước mắt họ là một người đàn ông áo đẫm máu, tay cầm dao, đứng cạnh xác vợ mình.`, next:"n83" },
+n83:{ mood:"rain", text:`Trước khi bị áp giải lên xe, ông Quốc ngước nhìn trời mưa trắng xóa. Một bóng hình thiếu nữ áo tím bay lơ lửng hiện ra — đôi mắt cam vàng của hoàng hôn đẫm máu nhìn thẳng vào ông, lạnh lẽo như xuyên thấu tim gan.`, next:"n84" },
+n84:{ mood:"rain", speaker:"Điệp Tử", text:`– Đó là câu nói của ông năm xưa, thưa giám đốc. "Coi chán rồi đốt quách đi."`, next:"n85" },
+n85:{ mood:"rain", speaker:"Cậu thiếu niên", text:`– Thì ra Điệp Tử trở về dương gian... là để trả thù.`, next:"n86" },
+n86:{ mood:"rain", text:`Điệp Tử quay lại. Trước mặt nàng, bóng dáng cậu thiếu niên tóc đen năm nào đang lơ lửng giữa không trung, ánh mắt buồn thẳm nhìn nàng không rời. Cậu ta biết tên nàng. Điều đó đáng suy nghĩ.`, next:"ch3_start" },
+
+/* === CH2(tt): NHẪN CƯỚI — PHAN & HẠNH === */
+ch3_start:{ section:"CHƯƠNG 2 · NHẪN CƯỚI", mood:"city", text:`Kẻ thứ hai — Phan, người đàn ông vụng về đã giữ nàng cho kẻ đóng đinh. Giờ đây anh ta đang sống trong một ngôi nhà bình thường, với một cuộc hôn nhân đang dần sụp đổ.`, next:"ch3_1" },
+ch3_1:{ mood:"city", text:`Đêm khuya, Hạnh về nhà trễ trong bộ dạng xa cách. Phan chờ đã lâu, lo lắng che giấu dưới lớp câu hỏi. Nhưng Hạnh chỉ dửng dưng đáp mấy từ rồi lên lầu đóng cửa.`, next:"ch3_2" },
+ch3_2:{ mood:"city", text:`Phan đã biết vợ và người bạn thân Sơn qua lại. Lần đầu ở quán cà phê, lần sau ngay trên giường của anh. Nhưng anh không nổi giận, không la hét — anh lên kế hoạch.`, next:"ch3_3" },
+ch3_3:{ mood:"ash", text:`Đêm đó, Phan mời Sơn đến nhà. Ly rượu có thuốc. Xác người hàng xóm vô tội được lấy từ tủ bếp. Ngọn lửa. Ngón tay bị cắt lìa. Những cây đinh ghim lên số phận người khác — Phan đã học được điều gì đó từ cuốn tiểu thuyết trinh thám.`, next:"ch3_4" },
+ch3_4:{ mood:"ash", fx:"shake", text:`Sơn bị kết án tử hình vì tội giết người, thiêu xác Phan. Nhưng Phan vẫn còn sống. Một tháng sau, anh lén về nhà — nghĩ rằng mọi chuyện đã xong, rằng Hạnh sẽ giận, khóc, rồi chấp nhận.`, next:"ch3_5" },
+ch3_5:{ mood:"ash", speaker:"Hạnh", text:`– Anh tưởng em không biết cái trò đổ tội đó? Em cũng đọc cuốn tiểu thuyết ấy rồi.`, next:"ch3_6" },
+ch3_6:{ mood:"ash", fx:"shake", text:`Đêm đó, trong cơn đau xé da xé thịt, Phan nhìn qua tấm cửa kính thấy Điệp Tử lơ lửng giữa không trung như cánh bướm bị treo dưới ánh trăng. Màu cam vàng của đôi mắt ánh lên rồi tắt dần. Đây là lần cuối Phan thấy bất kỳ điều gì.`, next:"ch3_7" },
+ch3_7:{ mood:"rain", text:`"Coi chán rồi đốt quách đi..." — câu nói năm xưa của Phan, giờ là câu kết thúc cuộc đời anh. Điệp Tử đã làm anh sống với đúng thứ anh đã gieo xuống khu rừng ấy: lửa, đau đớn, và sự phản bội.`, next:"ch3b_start" },
+
+/* === CH3: BÀ NỘI — GIA ĐÌNH THÙY === */
+ch3b_start:{ section:"CHƯƠNG 3 · BÀ NỘI", mood:"city", text:`Người phụ nữ đeo cặp kính dày — kẻ đã châm lửa bằng que diêm hôm đó — bây giờ là bà Hồng, mẹ chồng khó tính của Thùy. Bà không hề biết rằng nàng Bướm Tím đã nhìn thấy khuôn mặt bà.`, next:"ch3b_1" },
+ch3b_1:{ mood:"city", speaker:"Bà Hồng", text:`– Gọi bao nhiêu lần bây giờ mới xuống! Đón thằng Tuấn về chưa?`, next:"ch3b_2" },
+ch3b_2:{ mood:"city", text:`Thùy — con dâu hiền lành — nhẫn nhịn từng ngày. Con gái Thảo mười hai tuổi bệnh, sốt cao, nhưng bà Hồng chỉ nhớ đến thằng Tuấn bảy tuổi — đứa cháu trai duy nhất bà coi là đáng sống.`, next:"ch3b_3" },
+ch3b_3:{ mood:"city", speaker:"Bà Hồng", text:`– Mệt thì đi chết đi! Ở cái nhà này ai mà không mệt?`, next:"ch3b_4" },
+ch3b_4:{ mood:"city", text:`Những lời như dao cứ cắm vào Thảo mỗi ngày. Con bé học cách im lặng, cúi đầu, và khóc một mình trong bếp với bát cháo nguội. Đây là thứ bà Hồng gọi là "yêu thương".`, next:"ch3b_5" },
+ch3b_5:{ mood:"city", text:`Điệp Tử ngồi trên cành cây, nhìn vào cửa sổ. Lần này, nàng không cần nhúng tay nhiều. Khi một thứ đang chênh vênh trên cao, đôi khi chỉ cần một cú búng tay rất nhẹ là đủ để nó sụp đổ.`, next:"ch3b_6" },
+ch3b_6:{ mood:"ash", text:`Bà Hồng điên loạn vì phát hiện chiếc quần lót đàn ông trong phòng con dâu — thứ mà Điệp Tử đã cẩn thận đặt sẵn. Cuộc cãi vã bùng nổ dữ dội. Thùy ngã, máu chảy đầu. Rồi tay bà siết vào cổ Thảo.`, next:"ch3b_7" },
+ch3b_7:{ mood:"ash", fx:"shake", speaker:"Bà Hồng", text:`– Tuấn là con trai, lại còn giống ba nên bà thương nhất.`, next:"ch3b_8" },
+ch3b_8:{ mood:"ash", fx:"shake", text:`Tuấn đứng trên bậc thang, thấy bà nội đang siết cổ chị mình. Cậu nhìn qua cửa sổ — Điệp Tử đứng đó, đôi mắt cam vàng sang quắc. Trong tích tắc, câu nói trào lên từ môi đứa trẻ bảy tuổi, như một lời nguyền.`, next:"ch3b_9" },
+ch3b_9:{ mood:"ash", fx:"shake", speaker:"Tuấn", text:`– Bà chết đi!`, next:"ch3b_10" },
+ch3b_10:{ mood:"ash", text:`Bà Hồng trượt chân, ngã ra sau, đầu đập vào cạnh bàn. Điệp Tử biến mất. Và đứa cháu trai mà bà thương nhất suốt đời — chính là kẻ đã kết thúc cuộc đời bà. Nhân quả không cần bà hiểu.`, next:"ch4_start" },
+
+/* === CH4: EM GÁI — VĨ & HƯƠNG === */
+ch4_start:{ section:"CHƯƠNG 4 · EM GÁI", mood:"hospital", text:`Bệnh viện Phước Lộc, phòng 308. Hương, mười hai tuổi, sáu năm nằm thực vật. Vĩ — chàng trai đã dùng búa đóng đinh lên cánh bướm năm xưa — ngồi canh em trong căm lặng của sự hối hận.`, next:"ch4_1" },
+ch4_1:{ mood:"hospital", text:`Vĩ làm mọi việc nặng nhọc để trả viện phí cho em. Tay anh từng cầm búa, giờ cầm bao tải lao động — nhưng hình ảnh con bướm tím giãy giụa vẫn theo anh vào từng giấc ngủ.`, next:"ch4_2" },
+ch4_2:{ mood:"hospital", text:`Y tá Hồ bước vào — đôi mắt cam vàng sau lớp áo trắng. Điệp Tử đã ở đây từ sáng, đứng cạnh chiếc máy có nút đỏ duy trì hơi thở Hương, sẵn sàng kết thúc tất cả.`, next:"ch4_3" },
+ch4_3:{ mood:"hospital", text:`Nhưng ngón tay Điệp Tử dừng lại. Có điều gì ngăn nàng — một mảnh ký ức từ cuộc chuyện trò trước đó, lời Vĩ thú nhận với chính "y tá Hồ" về nỗi ám ảnh và sự hối hận không nguôi.`, next:"ch4_4" },
+ch4_4:{ mood:"hospital", text:`"Tôi sẽ xin lỗi chúng." — Vĩ đã nói vậy khi được hỏi. Và Điệp Tử, lần đầu tiên, cảm thấy thứ gì đó mơ hồ dừng bước chân báo thù.`, next:"ch4_5" },
+ch4_5:{ mood:"snow", text:`Đêm đó trời lạnh như cắt da. Mạnh Khôi mua cho Điệp Tử cây kẹo bông gòn — nụ cười anh hiền từ, ấm áp. Nàng ngồi nhìn đàn kiến dưới đất, hỏi điều nàng chưa bao giờ hỏi ai.`, next:"ch4_6" },
+ch4_6:{ mood:"snow", speaker:"Điệp Tử", text:`– Anh có gia đình chứ? Nếu ai ra tay giết hại cả nhà anh thì anh sẽ làm gì?`, next:"ch4_7" },
+ch4_7:{ mood:"snow", speaker:"Mạnh Khôi", text:`– Dĩ nhiên phải trả thù! Ai cũng có thứ quý giá riêng của mình, chẳng ai có quyền phá hoại của người khác.`, next:"ch4_8" },
+ch4_8:{ mood:"snow", text:`Mạnh Khôi xoa đôi bàn tay lạnh của nàng, nói "thế này là hạnh phúc rồi." Điệp Tử mỉm cười gật nhẹ. Xa xa trong bụi đêm trắng, Diên Vỹ đứng cạnh chiếc đèn đường, nhìn về phía họ với ánh mắt khó đọc.`, next:"ch4_9" },
+ch4_9:{ mood:"hospital", text:`Rồi tin đến: Hương đã ra đi — một cơn co giật cuối cùng, tim ngừng. Bác sĩ lắc đầu. Vĩ khóc ôm bàn tay em đã lạnh ngắt, gọi tên em không ngừng.`, next:"ch4_10" },
+ch4_10:{ mood:"hospital", text:`Trong phòng 308 chỉ còn lại người anh và nỗi đau không có tên. Rồi anh nhìn sang — Điệp Tử đứng đó, không cười, chỉ một gương mặt buồn, màu mắt cam vàng như biết nói. Rồi nàng biến mất, giống ảo ảnh.`, next:"ch4_11" },
+ch4_11:{ mood:"snow", text:`Bên ngoài bệnh viện, Diên Vỹ đã chờ sẵn. Chẳng nói gì, cậu kéo Điệp Tử vào xe ăn đêm. Cá viên chiên, đậu hũ nướng, cháo nóng. "Ăn đi, tôi đãi." Điệp Tử phì cười — lần đầu tiên, không gượng gạo.`, next:"ch5_start" },
+
+/* === CH5: ÁC MỘNG — TIỆT === */
+ch5_start:{ section:"CHƯƠNG 5 · ÁC MỘNG", mood:"city", text:`Nguyễn Văn Tiệt — kẻ đã dùng búa đóng đinh lên cánh nàng, kẻ nàng căm nhất trong bảy người. Hắn đang điều trị "mất ngủ" tại phòng khám bác sĩ Phú. Điệp Tử đã chờ đợi khoảnh khắc này.`, next:"ch5_1" },
+ch5_1:{ mood:"city", text:`Điệp Tử hóa thân thành Huyền — cô giáo mầm non dịu dàng ở công viên. Hắn mê ngay từ lần đầu gặp. Mỗi cuộc trò chuyện, nàng thêm một mảnh ghép vào bẫy đã dăng sẵn.`, next:"ch5_2" },
+ch5_2:{ mood:"midnight", text:`Đêm đến, Tiệt bỗng "mất ký ức". Sáng tỉnh dậy, tay dính máu, bên cạnh là xác nạn nhân bị cắt lưỡi. Thứ thuốc trong rượu của bác sĩ Phú đã "thôi miên" hắn giết người — hay đó là bàn tay Điệp Tử điều khiển từng cơn ác mộng?`, next:"ch5_3" },
+ch5_3:{ mood:"midnight", fx:"shake", text:`Tiệt hoảng loạn tột độ. Khi "Huyền" gợi ý chứng mất ký ức có thể do phương pháp thôi miên, Tiệt lao thẳng đến phòng khám với mấy thùng xăng và ngọn lửa tội ác trong lòng.`, next:"ch5_4" },
+ch5_4:{ mood:"fire", fx:"shake", text:`Phòng mạch bốc cháy. Tiệt điên dại nhìn ngọn lửa khi chợt nhớ: "Huyền" đã nói hôm nay sẽ đến khám. Từ trong cửa sổ, tiếng chuông điện thoại của "Huyền" vang lên rồi tắt hẳn. Tiệt làm rớt điện thoại.`, next:"ch5_5" },
+ch5_5:{ mood:"ash", text:`Khi xe cảnh sát đưa Tiệt đi, gã họ Nguyễn nhìn thấy giữa đống hoang tàn — Điệp Tử đứng đó, váy tím, nở nụ cười ma mị. Đó là lần cuối Tiệt thấy màu nắng.`, next:"ch6_start" },
+
+/* === CH6: BA DƯỢNG — BÍCH === */
+ch6_start:{ section:"CHƯƠNG 6 · BA DƯỢNG", mood:"park", text:`Bích, mười bảy tuổi, bướng bỉnh và sắc sảo. Cô sống với mẹ và gã ba dượng mà cô biết rõ bản chất — từ năm cô mười bốn. Điệp Tử nhận ra gia đình này trong danh sách báo thù, nhưng nhận ra điều gì đó khác.`, next:"ch6_1" },
+ch6_1:{ mood:"park", text:`Điệp Tử hóa thân thành bạn thân của Bích, cẩn thận tiếp cận. Nhưng mỗi lần nhìn đôi mắt trong sáng của Huy — người bạn trai đầu tiên của Bích — nàng lại thấy lòng mình lay động điều gì đó bất thường.`, next:"ch6_2" },
+ch6_2:{ mood:"city", text:`Điệp Tử đến gặp bà Mai — mẹ của Bích, cũng là người phụ nữ đeo kính dày đã châm lửa que diêm năm xưa. Nàng đặt vào tai bà ta những lời sai sự thật về Huy, chia rẽ mối tình đầu của Bích.`, next:"ch6_3" },
+ch6_3:{ mood:"city", text:`Huy chia tay Bích vì áp lực. Bích uống rượu đến say, về nhà trong đêm vắng. Và gã ba dượng đã chờ sẵn trong bóng tối, với thứ tội ác hắn đã ấp ủ từ lâu.`, next:"ch6_4" },
+ch6_4:{ mood:"ash", fx:"shake", text:`Sáng hôm sau, bà Mai tìm thấy xác ông Khoa trong phòng Bích — cây gậy sắt còn dính máu nằm bên cạnh. Rồi tiếng ghi âm trong máy nhạc của Bích phát lên, giọng ông Khoa thú nhận từng câu một.`, next:"ch6_5" },
+ch6_5:{ mood:"rain", fx:"shake", text:`Bà Mai lao ra đường tìm con, quá muộn — Bích đã lao vào gầm xe tải. Bà ngồi bệt giữa đường, ôm xác con trong tiếng khóc thảm thiết, nhận ra sự thật quá trễ. Điệp Tử đứng bên kia đường, không nói gì.`, next:"ch6_6" },
+ch6_6:{ mood:"rain", text:`Diên Vỹ đặt nhành huệ trắng nơi dòng máu Bích đã khô. Cậu ngẩng mặt lên cao, thở dài nặng trĩu: "Điệp Tử ơi là Điệp Tử, đến bao giờ cô mới tỉnh ra đây?"`, next:"ch7_start" },
+
+/* === CH7: CON NUÔI — NHÀ ÔNG TÙNG === */
+ch7_start:{ section:"CHƯƠNG 7 · CON NUÔI", mood:"wedding", text:`Lễ đường. Một đám cưới tươi đẹp biến thành ngày tang tóc. Xác cô dâu Yến tìm thấy trong phòng trang điểm — trúng độc natri xyanua. Ông Tùng, người cha nửa trắng nửa đen, gục khóc bên di ảnh con.`, next:"ch7_1" },
+ch7_1:{ mood:"wedding", text:`Nhưng Điệp Tử không ra tay giết Yến. Kẻ đó là Thái — con nuôi của ông Tùng, người biết bí mật: hai mươi hai năm trước, ông Tùng đã sát hại ba ruột của Thái để cướp tài sản rồi mang cậu về nuôi như một cách chuộc lỗi giả dối.`, next:"ch7_2" },
+ch7_2:{ mood:"midnight", text:`Điệp Tử chỉ là người châm ngòi. Nàng hóa thân thành Mi — cô bé út mười tuổi — cẩn thận sắp đặt mọi thứ: cho Thái thấy cuốn nhật ký bí mật của ông Tùng, thôi thúc lòng hận thù vốn đã âm ỉ bùng lên.`, next:"ch7_3" },
+ch7_3:{ mood:"midnight", speaker:"Mi / Điệp Tử", text:`– Ba dượng ơi, toàn bộ kế hoạch này đều do một tay tôi sắp đặt. Tôi muốn ông nếm trải mùi vị bị mất đi người thân — như cách ông đã làm với người khác.`, next:"ch7_4" },
+ch7_4:{ mood:"midnight", fx:"shake", text:`Thái bị khống chế bởi chính bàn tay mình, tự đâm vào người bởi sức mạnh vô hình của Điệp Tử. Ông Tùng bị bắn vào chân, sẽ sống cả đời trong tù với nỗi đau mất ba cô con gái.`, next:"ch7_5" },
+ch7_5:{ mood:"midnight", text:`Điệp Tử bay nhẹ nhàng lên trong khung cửa hoa văn, trông y hệt con bướm tím bị treo. Rồi hình ảnh nàng tan dần vào ánh trăng mờ nhạt.`, next:"ch8_start" },
+
+/* === CH8: BẠN MỚI — HỮU LẬP & TÂM KHẢ === */
+ch8_start:{ section:"CHƯƠNG 8 · BẠN MỚI", mood:"park", text:`Công viên một chiều. Hai anh em Hữu Lập và Tâm Khả suýt bị xe tải tông — Điệp Tử xuất hiện, giơ tay chặn. Thứ lực vô hình ngừng chiếc xe trong tích tắc. Hữu Lập nhìn nàng, ánh mắt sâu thẳm hơn cậu bé mười tám tuổi bình thường.`, next:"ch8_1" },
+ch8_1:{ mood:"park", speaker:"Hữu Lập", text:`– Chị tên gì? Em là Hữu Lập. Cảm ơn chị rất nhiều.`, next:"ch8_2" },
+ch8_2:{ mood:"park", speaker:"Điệp Tử", text:`– Chị tên Điệp Tử.`, next:"ch8_3" },
+ch8_3:{ mood:"park", text:`Tâm Khả — cô bé mười tuổi bướng bỉnh — lập tức ghét Diên Vỹ và đánh vào mặt cậu không chút ngần ngại. Diên Vỹ chỉ nhẹ nhàng nắm tay cô bé lại: "Mạnh mẽ đấy, cô bé."`, next:"ch8_4" },
+ch8_4:{ mood:"snow", text:`Tâm Khả trốn nhà vì không muốn gặp mẹ — người đã bỏ đi theo người khác. Diên Vỹ tìm thấy cô bé trong hẻm, bế cô ra ngoài, mua kem, ngồi lắng nghe. Cô bé khóc, cắn vào tay cậu, rồi khóc thêm nữa trong lòng cậu.`, next:"ch8_5" },
+ch8_5:{ mood:"snow", speaker:"Diên Vỹ", text:`– Yêu mẹ có gì là sai trái? Tâm Khả nghĩa là "có trái tim" — hãy dùng nó để tha thứ, không phải để giam giữ.`, next:"ch8_6" },
+ch8_6:{ mood:"park", text:`Một buổi chiều khác, Hữu Lập ngồi cạnh Điệp Tử bên ghế đá. Gió thổi, cậu nhẹ nhàng vén mái tóc nàng qua vành tai. "Vì chị đáng yêu." Rồi cậu nói đó là đùa — nhưng ánh mắt không nói dối.`, next:"ch8_7" },
+ch8_7:{ mood:"park", text:`Điệp Tử thấy lòng mình lay động thứ chưa từng có tên. Nàng biết cậu là con trai của ông Thọ — kẻ cuối cùng trong danh sách. Nhưng điều đó không làm nàng rời đi. Ít nhất, chưa phải lúc này.`, next:"ch9_start" },
+
+/* === CH9: CHÂN TƯỚNG === */
+ch9_start:{ section:"CHƯƠNG 9 · CHÂN TƯỚNG", mood:"midnight", text:`Mạnh Khôi — người đã xuất hiện bảo vệ Điệp Tử ngay từ buổi đầu — đêm nay mời nàng đến nhà riêng. Nàng không biết rằng trong căn phòng tối cuối hành lang, những tấm ảnh chụp nàng đã bị gạch chéo bằng mực đỏ.`, next:"ch9_1" },
+ch9_1:{ mood:"midnight", text:`Điệp Tử theo con mèo đen vào căn phòng bí ẩn. Cây thánh giá gỗ. Bức ảnh cô gái váy hồng — chính là thân xác nàng đang mang. Và những tấm ảnh chụp nàng bị gạch chéo với chữ "Giết" màu đỏ máu.`, next:"ch9_2" },
+ch9_2:{ mood:"midnight", fx:"shake", text:`Thứ dung dịch hất vào người nàng. Tay chân bị trói lên cây thánh giá. Mạnh Khôi xuất hiện với gương mặt hoàn toàn khác — không còn nụ cười dịu dàng, chỉ còn vẻ tráo trở của kẻ điên loạn vì thù hận.`, next:"ch9_3" },
+ch9_3:{ mood:"midnight", speaker:"Mạnh Khôi", text:`– Cô có gương mặt rất giống người con gái ta yêu. Cô là hồn ma nhập vào xác nàng ấy — ta phải giết chết ngươi. Đó là máu chó, ác quỷ vẫn sợ máu chó.`, next:"ch9_4" },
+ch9_4:{ mood:"midnight", text:`Đúng lúc đó, ánh đèn bật sáng. Diên Vỹ đứng ngay cửa phòng, tháo dây trói cho Điệp Tử. "Cô đây. Mạnh Khôi đã thuê xe tông chết cô gái váy hồng — để trả thù người yêu bội bạc. Rồi tình cờ gặp cô, quyết định tiếp cận để ra tay."`, next:"ch9_5" },
+ch9_5:{ mood:"midnight", text:`Những sợi dây leo khổng lồ trồi lên từ sàn nhà siết chặt Mạnh Khôi. Diên Vỹ gọi cảnh sát. Khi rời nhà, họ còn nghe tiếng tên điên đó la hét sau lưng.`, next:"ch9_6" },
+ch9_6:{ mood:"midnight", text:`Tin Hữu Lập bị bắt cóc. Và Tâm Khả trao cho Diên Vỹ một chiếc hộp nhỏ, giọng run run: "Anh Hữu Lập muốn gửi cái này cho chị Điệp Tử."`, next:"ch10_start" },
+
+/* === CH10: SỨ MỆNH — HỒI KẾT === */
+ch10_start:{ section:"CHƯƠNG 10 · SỨ MỆNH", mood:"midnight", text:`Điệp Tử từ từ mở mắt, người bị trói trên cây thánh giá. Mạnh Khôi đứng đó với thứ mà hắn gọi là "máu chó" và sự điên loạn của tình yêu biến chất. Đây chỉ là thứ nàng phải vượt qua trước khi làm nốt điều cuối cùng.`, next:"ch10_1" },
+ch10_1:{ mood:"midnight", text:`Sau khi được giải cứu, Điệp Tử cầm lá thư Hữu Lập gửi, tay run run. "Chị Điệp Tử, khi chị có lá thư này trong tay thì có lẽ em đã không thể trở về..."`, next:"ch10_2" },
+ch10_2:{ mood:"midnight", speaker:"Diên Vỹ", text:`– Hữu Lập biết tất cả về cô — từ đầu. Cậu ấy có giác quan thứ sáu, đọc được suy nghĩ người khác qua sự va chạm. Đó là lý do cậu ấy không bao giờ chủ động chạm vào người khác.`, next:"ch10_3" },
+ch10_3:{ mood:"rain", text:`Và cậu ấy không trốn tránh. Biết nàng muốn trả thù ba mình — ông Thọ, người đã thuê nhóm khảo sát đến khai hoang khu rừng năm ấy để tổ chức tiệc sinh nhật cho cậu — Hữu Lập vẫn chọn đứng ra nhận.`, next:"ch10_4" },
+ch10_4:{ mood:"rain", fx:"shake", speaker:"Diên Vỹ", text:`– Hữu Lập đã tự sắp đặt cuộc bắt cóc chính mình. Để bảo vệ ba và em gái khỏi tay cô. Cô hiểu không? Cậu ấy chọn chết thay.`, next:"ch10_5" },
+ch10_5:{ mood:"rain", text:`Đoàng! Tiếng súng từ sân ga vang lên. Điệp Tử lao đến vách đồi, nhìn xuống — Hữu Lập ngã, máu chảy dài trên trán. Ông Thọ gào thét. Tâm Khả khóc nức nở. Và Điệp Tử, lần đầu tiên, cảm thấy lồng ngực muốn vỡ.`, next:"ch10_6" },
+ch10_6:{ mood:"rain", text:`"Tại sao? Tại sao cậu ta khờ dại như thế? Đã biết tôi muốn trả thù thì vì sao còn..." Sống mũi Điệp Tử cay xè, giọng nghẹn ngào đứt quãng.`, next:"ch10_7" },
+ch10_7:{ mood:"rain", text:`Chiếc hộp nhỏ trong tay nàng. Điệp Tử mở ra — một nghìn con hạt giấy được xếp tỉ mỉ, đẹp đẽ. Và mảnh giấy nhỏ nhòe nước mưa: "Em sẽ xếp một nghìn con hạt giấy với tất cả tấm lòng. Hãy hạnh phúc nhé! Em thích chị."`, next:"ch10_8" },
+ch10_8:{ mood:"rain", text:`Lần đầu tiên, Điệp Tử mới biết, khóc là như thế nào. Đó là lúc bị tổn thương. Là khi hối hận vô vàn. Là lúc quý mến một người nhưng người đó lại muốn giết ta. Và đó cũng là lúc, ta nhẫn tâm giết chết người thật lòng yêu thương mình.`, next:"ch10_9" },
+ch10_9:{ mood:"rain", speaker:"Diên Vỹ", text:`– Điệp Tử, trả thù chẳng mang lại điều gì tốt đẹp. Những người thân của cô đã chuyển kiếp rồi. Còn cô... hãy làm lại từ đầu.`, next:"ch10_10" },
+ch10_10:{ mood:"rain", speaker:"Điệp Tử", text:`– Diên Vỹ... thật ra cậu là ai?`, next:"ch10_11" },
+ch10_11:{ mood:"rain", speaker:"Diên Vỹ", text:`– Tôi chính là cậu bé hoa diên vỹ mà ba năm trước cô đã nuốt vào bụng. Giúp cô làm lại từ đầu là sứ mệnh của tôi.`, next:"ch10_12" },
+ch10_12:{ mood:"field", text:`Đôi mắt Điệp Tử tròn xoe không chớp. "Cậu bé hoa mới nở ba năm trước, một bông hoa diên vỹ màu xanh đẹp đẽ, tinh khôi. Cậu đã chẳng trách nàng. Cậu chỉ xin được giúp."`, next:"ch10_13" },
+ch10_13:{ mood:"field", text:`Lần cuối, trước khi linh hồn tan biến, Điệp Tử đã mỉm cười — nụ cười ẩn hiện trong màn mưa, cay đắng nhưng bình yên. Nàng nhắm mắt. Thân hình người con gái ngã xuống nhẹ nhàng như chiếc lá.`, next:"ch10_14" },
+ch10_14:{ mood:"field", text:`Sợi dây chuỗi hạt trên tay Diên Vỹ đứt. Những hột đen và trắng rơi vung vãi xuống nền cỏ xanh mướt, bình yên. Cậu nói khẽ: "Điệp Tử đã về trời..."`, next:"ch10_15" },
+ch10_15:{ section:"EPILOGUE · TÁM NĂM SAU", mood:"field", text:`Một ngôi trường cấp ba. Cô nữ sinh mười tám tuổi bước ra cổng — và thấy bóng người quen đứng giữa làn hoa bay xòa thưa thớt. Mái tóc đen bồng bềnh. Nụ cười ấy.`, next:"ch10_16" },
+ch10_16:{ mood:"field", speaker:"Tâm Khả", text:`– Diên Vỹ... Anh Diên Vỹ? Đồ đáng ghét! Anh đã bỏ đi đâu vậy, em chờ anh lâu lắm có biết không? Tám năm đấy!`, next:"ch10_17" },
+ch10_17:{ mood:"field", speaker:"Diên Vỹ", text:`– Thì giờ anh đã về rồi.`, next:"ch10_18" },
+ch10_18:{ mood:"field", text:`Tâm Khả vứt cặp xuống đất, ôm chầm lấy cậu, khóc nức nở trong tiếng trách móc. Qua tám năm cố gắng, Diên Vỹ — cậu bé hoa diên vỹ từng bị Bướm Tím nuốt chửng — đã hóa kiếp thành người.`, next:"ch10_19" },
+ch10_19:{ mood:"field", text:`Ở đâu đó xa xôi, trên cánh đồng vắng, một cô gái trẻ mặc váy tím với đôi mắt cam vàng ngồi cạnh một đứa bé đang khóc vì bà ngoại vừa mất. Nàng trao cho con bé một con hạt giấy, nói nhẹ nhàng...`, next:"ch10_20" },
+ch10_20:{ mood:"field", speaker:"Điệp Tử", text:`– Viết tên bà em vào con hạt này, treo lên cửa sổ, chờ cơn gió đi qua. Khi con hạt rung, em sẽ được gặp bà. Tin chị nhé.`, next:"ch10_21" },
+ch10_21:{ mood:"field", text:`Đứa bé chạy đi với nụ cười. Điệp Tử dõi theo, lòng thanh thản. Trên cổ tay nàng, sợi chỉ đỏ treo một con hạt giấy, cánh có dòng chữ: "Hữu Lập". Gió nổi. Con hạt rung lên, thật nhẹ.`, next:"ch10_22" },
+ch10_22:{ mood:"field", speaker:"Điệp Tử", text:`– Cậu lại về thăm tôi phải không, Hữu Lập?`, next:"end_main" },
+
+end_main:{ end:true, mood:"field", title:"✦ Hết · Bướm Báo Thù ✦", body:`"Sứ mệnh của bướm chính là, mang linh hồn người chết về bên cạnh những người thân yêu của họ."\n\n— Võ Anh Thơ, Sài Gòn 18/11/2011` },
+end_letgo:{ end:true, mood:"spirit", title:"Kết cục phụ — Buông Bỏ", body:`Bà Bà khẽ gật đầu, không một lời trách. Ánh sáng ấm áp bao trùm lấy Bướm Tím — một vòng luân hồi mới lặng lẽ bắt đầu, không hận thù, không níu kéo.\n\nĐây là một trong những kết cục có thể xảy ra. Hãy chọn "Trả thù" ở khúc rẽ để theo mạch chính.` },
+};
+
+/* ============ PROGRESS TRACKING ============ */
+const NODE_KEYS = Object.keys(NODES);
+const TOTAL = NODE_KEYS.length;
+function updateProgress(id){
+  const idx = NODE_KEYS.indexOf(id);
+  const pct = idx < 0 ? 0 : Math.round((idx / TOTAL) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+/* ============ ENGINE ============ */
+const titleScreen = document.getElementById('title-screen');
+const gameScreen = document.getElementById('game-screen');
+const endScreen = document.getElementById('end-screen');
+const stage = document.getElementById('stage');
+const speakerEl = document.getElementById('speaker');
+const textEl = document.getElementById('dialog-text');
+const continueRow = document.getElementById('continue-indicator');
+const choicesEl = document.getElementById('choices');
+const chapterLabel = document.getElementById('chapter-label');
+const tapZone = document.getElementById('tap-zone');
+const flashEl = document.getElementById('flash');
+const rgbGlitch = document.getElementById('rgb-glitch');
+const cutveilEl = document.getElementById('cutveil');
+const dialogPanel = document.getElementById('dialog-panel');
+
+let typing = false, typeTimer = null, currentNode = null, currentSection = "";
+let lastAmbMood = null, sfxOn = true, voiceOn = false;
+
+function setMood(mood){
+  const prevMood = stage.className.replace('mood-','').trim();
+  if(mood !== prevMood && prevMood !== ''){
+    cutveilEl.classList.remove('cut-on'); void cutveilEl.offsetWidth; cutveilEl.classList.add('cut-on');
+  }
+  stage.className = '';
+  if(mood) stage.classList.add('mood-' + mood);
+  setParticleMood(mood);
+  document.querySelectorAll('.art-group').forEach(g=>g.classList.remove('active'));
+  if(mood){ const el = document.getElementById('art-' + mood); if(el) el.classList.add('active'); }
+  if(mood !== lastAmbMood){ lastAmbMood = mood; startAmbience(mood); }
+}
+
+function doFx(fx){
+  if(fx === 'flash'){
+    flashEl.classList.remove('flash-on'); void flashEl.offsetWidth; flashEl.classList.add('flash-on');
+    playStinger();
+  }
+  if(fx === 'shake'){
+    dialogPanel.classList.remove('shake'); void dialogPanel.offsetWidth; dialogPanel.classList.add('shake');
+    stage.classList.remove('shake'); void stage.offsetWidth; stage.classList.add('shake');
+    rgbGlitch.classList.remove('glitch-on'); void rgbGlitch.offsetWidth; rgbGlitch.classList.add('glitch-on');
+    playImpact();
+  }
+}
+
+function showNode(id){
+  updateProgress(id);
+  const node = NODES[id];
+  currentNode = node;
+  if(node.section && node.section !== currentSection){
+    currentSection = node.section;
+    chapterLabel.style.opacity = 0;
+    setTimeout(()=>{ chapterLabel.textContent = currentSection; chapterLabel.style.opacity = 1; }, 350);
+  }
+  setMood(node.mood);
+  if(node.fx) doFx(node.fx);
+  if(node.end){ renderEnd(node); return; }
+  speakerEl.textContent = node.speaker || '';
+  choicesEl.classList.add('hidden'); choicesEl.innerHTML = '';
+  continueRow.classList.remove('show');
+  speakNode(node);
+  typeText(node.text);
+}
+
+function typeText(full){
+  clearInterval(typeTimer);
+  textEl.textContent = '';
+  let i = 0; typing = true;
+  const delay = 16;
+  typeTimer = setInterval(()=>{
+    textEl.textContent = full.slice(0, i+1);
+    i++;
+    if(i >= full.length){ clearInterval(typeTimer); typing = false; onTypeDone(); }
+  }, delay);
+}
+
+function finishTypingNow(){
+  clearInterval(typeTimer); typing = false;
+  textEl.textContent = currentNode.text;
+  onTypeDone();
+}
+
+function onTypeDone(){
+  if(currentNode.choices){
+    choicesEl.classList.remove('hidden');
+    choicesEl.innerHTML = '';
+    currentNode.choices.forEach((c, idx)=>{
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.innerHTML = '<span class="num">' + (idx+1) + ' ·</span>' + c.label;
+      btn.onclick = (e)=>{ e.stopPropagation(); playBlip(620); showNode(c.next); };
+      choicesEl.appendChild(btn);
+    });
+  } else {
+    continueRow.classList.add('show');
+  }
+}
+
+tapZone.addEventListener('click', ()=>{
+  if(!currentNode || currentNode.choices) return;
+  if(typing){ finishTypingNow(); return; }
+  if(currentNode.next){ playBlip(480); showNode(currentNode.next); }
+});
+
+function renderEnd(node){
+  gameScreen.hidden = true;
+  endScreen.classList.remove('hidden');
+  document.getElementById('end-title').textContent = node.title;
+  document.getElementById('end-body').textContent = node.body;
+  document.getElementById('progress-bar').style.width = '100%';
+  speakText(node.title + '. ' + node.body);
+}
+
+/* Title screen */
+document.getElementById('start-btn').onclick = ()=>{
+  ensureAudio(); playBlip(700); primeSpeech();
+  titleScreen.style.display = 'none';
+  gameScreen.hidden = false;
+  showNode('n1');
+};
+
+/* Chapter select */
+document.getElementById('toggle-ch-btn').onclick = ()=>{
+  const menu = document.getElementById('chapter-menu');
+  menu.classList.toggle('show');
+};
+document.querySelectorAll('.ch-btn').forEach(btn=>{
+  btn.onclick = ()=>{
+    ensureAudio(); playBlip(700); primeSpeech();
+    titleScreen.style.display = 'none';
+    gameScreen.hidden = false;
+    showNode(btn.dataset.node);
+  };
+});
+
+document.getElementById('restart-btn').onclick = resetGame;
+document.getElementById('end-restart-btn').onclick = resetGame;
+
+const soundBtn = document.getElementById('sound-btn');
+const voiceBtn = document.getElementById('voice-btn');
+soundBtn.onclick = ()=> setSfx(!sfxOn);
+voiceBtn.onclick = ()=> setVoice(!voiceOn);
+
+function resetGame(){
+  clearInterval(typeTimer); typing = false;
+  if('speechSynthesis' in window) speechSynthesis.cancel();
+  endScreen.classList.add('hidden');
+  gameScreen.hidden = true;
+  titleScreen.style.display = 'flex';
+  currentSection = "";
+  chapterLabel.textContent = "CHƯƠNG 1 · KHU RỪNG";
+  document.getElementById('progress-bar').style.width = '0%';
+  setMood(null);
+}
+
+/* ============ AUDIO ENGINE ============ */
+let audioCtx = null, masterGain = null;
+function ensureAudio(){
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = audioCtx.createGain(); masterGain.gain.value = sfxOn ? 0.7 : 0;
+    masterGain.connect(audioCtx.destination);
+  }
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+}
+function noiseBuffer(dur){
+  const n = Math.max(1, Math.floor(audioCtx.sampleRate * dur));
+  const buf = audioCtx.createBuffer(1, n, audioCtx.sampleRate);
+  const d = buf.getChannelData(0);
+  for(let i=0;i<n;i++) d[i] = Math.random()*2-1;
+  return buf;
+}
+function thump(freq, delay, vol){
+  if(!audioCtx) return;
+  const t = audioCtx.currentTime + delay;
+  const osc = audioCtx.createOscillator(); osc.type='sine';
+  osc.frequency.setValueAtTime(freq, t);
+  osc.frequency.exponentialRampToValueAtTime(Math.max(20,freq*0.6), t+0.18);
+  const g = audioCtx.createGain(); g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol, t+0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t+0.24);
+  osc.connect(g); g.connect(masterGain);
+  osc.start(t); osc.stop(t+0.26);
+}
+function playBlip(freq){
+  if(!sfxOn || !audioCtx) return;
+  const t = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator(); osc.type='sine'; osc.frequency.value = freq;
+  const g = audioCtx.createGain(); g.gain.setValueAtTime(0.0001,t);
+  g.gain.exponentialRampToValueAtTime(0.1, t+0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, t+0.13);
+  osc.connect(g); g.connect(masterGain); osc.start(t); osc.stop(t+0.15);
+}
+function playStinger(){
+  if(!sfxOn) return; ensureAudio();
+  const t = audioCtx.currentTime;
+  const src = audioCtx.createBufferSource(); src.buffer = noiseBuffer(0.35);
+  const filt = audioCtx.createBiquadFilter(); filt.type='bandpass';
+  filt.frequency.setValueAtTime(2200, t); filt.frequency.exponentialRampToValueAtTime(180, t+0.4);
+  const g = audioCtx.createGain(); g.gain.setValueAtTime(0.22, t); g.gain.exponentialRampToValueAtTime(0.0001, t+0.4);
+  src.connect(filt); filt.connect(g); g.connect(masterGain);
+  src.start(t); src.stop(t+0.42);
+}
+function playImpact(){
+  if(!sfxOn) return; ensureAudio();
+  thump(110, 0, 0.3);
+  const t = audioCtx.currentTime;
+  const src = audioCtx.createBufferSource(); src.buffer = noiseBuffer(0.06);
+  const g = audioCtx.createGain(); g.gain.setValueAtTime(0.18, t); g.gain.exponentialRampToValueAtTime(0.0001, t+0.08);
+  src.connect(g); g.connect(masterGain); src.start(t);
+}
+function playCrackle(){
+  if(!sfxOn || !audioCtx) return;
+  const t = audioCtx.currentTime;
+  const src = audioCtx.createBufferSource(); src.buffer = noiseBuffer(0.07);
+  const filt = audioCtx.createBiquadFilter(); filt.type='highpass'; filt.frequency.value = 1400;
+  const g = audioCtx.createGain(); g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(0.14 + Math.random()*0.12, t+0.005);
+  g.gain.exponentialRampToValueAtTime(0.0001, t+0.05+Math.random()*0.05);
+  src.connect(filt); filt.connect(g); g.connect(masterGain);
+  src.start(t); src.stop(t+0.15);
+}
+function playHeartbeat(){
+  if(!sfxOn || !audioCtx) return;
+  thump(70, 0, 0.12); thump(58, 0.18, 0.09);
+}
+function playPatter(){
+  if(!sfxOn || !audioCtx) return;
+  const t = audioCtx.currentTime;
+  const src = audioCtx.createBufferSource(); src.buffer = noiseBuffer(0.04);
+  const filt = audioCtx.createBiquadFilter(); filt.type='highpass'; filt.frequency.value = 3000;
+  const g = audioCtx.createGain(); g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(0.05 + Math.random()*0.04, t+0.004);
+  g.gain.exponentialRampToValueAtTime(0.0001, t+0.03+Math.random()*0.03);
+  src.connect(filt); filt.connect(g); g.connect(masterGain);
+  src.start(t); src.stop(t+0.08);
+}
+function playChime(){
+  if(!sfxOn || !audioCtx) return;
+  [880, 1108, 1320].forEach((f, i)=>{
+    const t = audioCtx.currentTime + i*0.12;
+    const osc = audioCtx.createOscillator(); osc.type='sine'; osc.frequency.value = f;
+    const g = audioCtx.createGain(); g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(0.08, t+0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+0.5);
+    osc.connect(g); g.connect(masterGain); osc.start(t); osc.stop(t+0.55);
+  });
+}
+
+let ambNodes = null;
+const AMB_CFG = {
+  forest:   { type:'lowpass',  freq:800,  q:0.7, vol:0.045 },
+  fire:     { type:'lowpass',  freq:1200, q:0.5, vol:0.06, crackle:true },
+  pin:      { type:'bandpass', freq:220,  q:1.2, vol:0.05, pulse:true },
+  ash:      { type:'lowpass',  freq:500,  q:0.6, vol:0.035 },
+  spirit:   { type:'highpass', freq:1800, q:0.4, vol:0.03 },
+  threshold:{ type:'lowpass',  freq:1000, q:0.5, vol:0.045 },
+  city:     { type:'lowpass',  freq:900,  q:0.6, vol:0.03 },
+  rain:     { type:'lowpass',  freq:600,  q:0.8, vol:0.05, patter:true },
+  hospital: { type:'bandpass', freq:400,  q:1.5, vol:0.025, pulse:true },
+  snow:     { type:'highpass', freq:2200, q:0.3, vol:0.02 },
+  park:     { type:'lowpass',  freq:1100, q:0.6, vol:0.035 },
+  wedding:  { type:'bandpass', freq:700,  q:0.8, vol:0.03 },
+  midnight: { type:'lowpass',  freq:300,  q:0.9, vol:0.04, pulse:true },
+  field:    { type:'lowpass',  freq:1000, q:0.5, vol:0.04 },
+};
+function startAmbience(mood){
+  if(!sfxOn || !mood || !AMB_CFG[mood]){ stopAmbience(true); return; }
+  ensureAudio();
+  stopAmbience(true);
+  const cfg = AMB_CFG[mood];
+  const src = audioCtx.createBufferSource(); src.buffer = noiseBuffer(2); src.loop = true;
+  const filt = audioCtx.createBiquadFilter(); filt.type = cfg.type; filt.frequency.value = cfg.freq; filt.Q.value = cfg.q;
+  const gain = audioCtx.createGain(); gain.gain.value = 0;
+  src.connect(filt); filt.connect(gain); gain.connect(masterGain);
+  src.start();
+  gain.gain.linearRampToValueAtTime(cfg.vol, audioCtx.currentTime + 1.2);
+  const lfo = audioCtx.createOscillator(); lfo.frequency.value = 0.08;
+  const lfoGain = audioCtx.createGain(); lfoGain.gain.value = cfg.freq * 0.3;
+  lfo.connect(lfoGain); lfoGain.connect(filt.frequency); lfo.start();
+  ambNodes = { src, gain, lfo };
+  if(cfg.crackle) ambNodes.crackleInt = setInterval(playCrackle, 260 + Math.random()*420);
+  if(cfg.pulse) ambNodes.pulseInt = setInterval(playHeartbeat, 900);
+  if(cfg.patter) ambNodes.patterInt = setInterval(playPatter, 70 + Math.random()*90);
+}
+function stopAmbience(immediate){
+  if(!ambNodes) return;
+  const { src, gain, lfo, crackleInt, pulseInt, patterInt } = ambNodes;
+  if(crackleInt) clearInterval(crackleInt);
+  if(pulseInt) clearInterval(pulseInt);
+  if(patterInt) clearInterval(patterInt);
+  try{
+    const now = audioCtx.currentTime;
+    gain.gain.cancelScheduledValues(now); gain.gain.setValueAtTime(gain.gain.value, now);
+    gain.gain.linearRampToValueAtTime(0, now + (immediate ? 0.35 : 0.05));
+    setTimeout(()=>{ try{ src.stop(); lfo.stop(); }catch(e){} }, immediate ? 400 : 80);
+  }catch(e){}
+  ambNodes = null;
+}
+function setSfx(on){
+  sfxOn = on; ensureAudio();
+  const t = audioCtx.currentTime;
+  masterGain.gain.cancelScheduledValues(t); masterGain.gain.setValueAtTime(masterGain.gain.value, t);
+  masterGain.gain.linearRampToValueAtTime(on ? 0.7 : 0, t + 0.3);
+  if(on){ lastAmbMood = null; startAmbience(currentNode ? currentNode.mood : null); } else { stopAmbience(true); }
+  soundBtn.classList.toggle('active', on);
+  soundBtn.textContent = on ? '🔊' : '🔇';
+}
+
+/* ============ SPEECH ============ */
+let viVoice = null;
+function loadVoices(){
+  if(!('speechSynthesis' in window)) return;
+  const voices = speechSynthesis.getVoices();
+  viVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('vi')) || null;
+}
+if('speechSynthesis' in window){ speechSynthesis.onvoiceschanged = loadVoices; loadVoices(); }
+function speakText(str){
+  if(!voiceOn || !('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  clearTimeout(speakDelayTimer);
+  speakDelayTimer = setTimeout(()=>{
+    const utter = new SpeechSynthesisUtterance(str.replace(/^–\s*/, ''));
+    utter.lang = 'vi-VN'; if(viVoice) utter.voice = viVoice;
+    utter.rate = 0.97; utter.pitch = 1;
+    speechSynthesis.speak(utter);
+  }, 60);
+}
+let speakDelayTimer = null;
+function primeSpeech(){
+  if(!('speechSynthesis' in window)) return;
+  try{ speechSynthesis.cancel(); const w=new SpeechSynthesisUtterance(' '); w.volume=0; speechSynthesis.speak(w); }catch(e){}
+}
+function speakNode(node){ if(voiceOn) speakText(node.text); }
+function setVoice(on){
+  voiceOn = on; voiceBtn.classList.toggle('active', on);
+  if(on && currentNode && !currentNode.end) speakNode(currentNode);
+  if(!on && 'speechSynthesis' in window) speechSynthesis.cancel();
+}
+setInterval(()=>{
+  if('speechSynthesis' in window && speechSynthesis.speaking){ speechSynthesis.pause(); speechSynthesis.resume(); }
+}, 4000);
+if(!('speechSynthesis' in window)){
+  voiceOn = false; voiceBtn.disabled = true; voiceBtn.textContent = '🚫';
+  voiceBtn.title = 'Trình duyệt này không hỗ trợ giọng đọc'; voiceBtn.classList.remove('active');
+}
+
+/* ============ PARTICLES ============ */
+const canvas = document.getElementById('fx');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+function resize(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+resize(); addEventListener('resize', resize);
+
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let particleMood = 'calm';
+function setParticleMood(mood){
+  const map = {
+    forest:'fog', fire:'embers', pin:'embers', ash:'ash', spirit:'wings',
+    threshold:'calm', city:'fog', rain:'rain',
+    hospital:'teal', snow:'snow', park:'fog', wedding:'petals',
+    midnight:'wings', field:'sparkle'
+  };
+  particleMood = map[mood] || 'calm';
+}
+
+function spawn(type){
+  if(type==='fog') return { type, x:Math.random()*W, y:Math.random()*H*0.7, r:80+Math.random()*120, vx:(Math.random()-0.5)*0.06, life:1, decay:0.0006, hue:'138,74,120' };
+  if(type==='embers') return { type, x:Math.random()*W, y:H+10, r:1.5+Math.random()*2, vy:-(0.4+Math.random()*0.9), vx:(Math.random()-0.5)*0.4, life:1, decay:0.006+Math.random()*0.006, hue:Math.random()>0.5?'196,38,79':'214,161,74' };
+  if(type==='ash') return { type, x:Math.random()*W, y:-10, r:1+Math.random()*1.8, vy:0.25+Math.random()*0.35, vx:(Math.random()-0.5)*0.3, life:1, decay:0.003, hue:'165,144,140' };
+  if(type==='wings') return { type, x:Math.random()*W, y:Math.random()*H, r:3+Math.random()*3, vy:-(0.12+Math.random()*0.18), vx:(Math.random()-0.5)*0.25, life:1, decay:0.0025, hue:'214,161,74', rot:Math.random()*6.28, rs:(Math.random()-0.5)*0.02 };
+  if(type==='rain') return { type, x:Math.random()*W, y:-20, len:14+Math.random()*18, vy:7+Math.random()*5, vx:-1.2-Math.random()*1.2, life:1, decay:0.002, hue:'170,190,210' };
+  if(type==='teal') return { type, x:Math.random()*W, y:Math.random()*H, r:2+Math.random()*3, vy:-(0.08+Math.random()*0.12), vx:(Math.random()-0.5)*0.15, life:1, decay:0.002, hue:'58,138,138' };
+  if(type==='snow') return { type, x:Math.random()*W, y:-10, r:1.5+Math.random()*2.5, vy:0.3+Math.random()*0.5, vx:(Math.random()-0.5)*0.4, life:1, decay:0.002, hue:'176,184,200' };
+  if(type==='petals') return { type, x:Math.random()*W, y:-10, r:3+Math.random()*4, vy:0.4+Math.random()*0.6, vx:(Math.random()-0.5)*0.8, life:1, decay:0.003, hue:'196,38,79', rot:Math.random()*6.28, rs:(Math.random()-0.5)*0.04 };
+  if(type==='sparkle') return { type, x:Math.random()*W, y:Math.random()*H, r:1+Math.random()*2, vy:-(0.1+Math.random()*0.2), vx:(Math.random()-0.5)*0.2, life:1, decay:0.003, hue:'214,161,74' };
+  return { type:'calm', x:Math.random()*W, y:Math.random()*H, r:1, vy:-0.05, vx:0, life:1, decay:0.001, hue:'214,161,74' };
+}
+
+const MAXP = 80;
+function tick(){
+  if(!reducedMotion && particles.length < MAXP && Math.random() < (particleMood==='rain'?0.9:0.6)){
+    particles.push(spawn(particleMood));
+  }
+  ctx.clearRect(0,0,W,H);
+  particles.forEach(p=>{
+    p.life -= p.decay;
+    if(p.type==='fog'){
+      p.x += p.vx;
+      const g = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
+      g.addColorStop(0,`rgba(${p.hue},${0.10*p.life})`);
+      g.addColorStop(1,`rgba(${p.hue},0)`);
+      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.28); ctx.fill();
+    } else if(['embers','ash','teal','snow','sparkle'].includes(p.type)){
+      p.x += p.vx; p.y += p.vy;
+      ctx.fillStyle=`rgba(${p.hue},${0.75*p.life})`; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.28); ctx.fill();
+    } else if(['wings','petals'].includes(p.type)){
+      p.x += p.vx; p.y += p.vy; p.rot += p.rs;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      ctx.fillStyle=`rgba(${p.hue},${0.5*p.life})`;
+      ctx.beginPath(); ctx.ellipse(0,0,p.r,p.r*1.6,0,0,6.28); ctx.fill(); ctx.restore();
+    } else if(p.type==='rain'){
+      p.x += p.vx; p.y += p.vy;
+      ctx.strokeStyle=`rgba(${p.hue},${0.45*p.life})`; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(p.x+p.vx*2.5,p.y+p.len); ctx.stroke();
+    } else {
+      p.y += p.vy;
+      ctx.fillStyle=`rgba(${p.hue},${0.35*p.life})`; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.28); ctx.fill();
+    }
+  });
+  particles = particles.filter(p=> p.life>0 && p.y>-50 && p.y<H+50);
+  requestAnimationFrame(tick);
+}
+tick();
+</script>
+</body>
+</html>
