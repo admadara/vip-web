@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Bướm Báo Thù — Demo Chương 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Noto+Serif+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-void:#0a0507;
+    --bg-deep:#170d12;
+    --violet:#8a4a78;
+    --violet-deep:#3c1f37;
+    --blood:#7d1430;
+    --blood-bright:#c4264f;
+    --amber:#d6a14a;
+    --paper:#ece2d3;
+    --text-dim:#a5908c;
+    --line: rgba(214,161,74,0.18);
+    --panel: rgba(15,9,12,0.94);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    margin:0; background:var(--bg-void); color:var(--paper);
+    font-family:'Be Vietnam Pro', sans-serif;
+    overflow:hidden; height:100dvh; width:100vw;
+    position:relative; user-select:none;
+  }
+  .serif{ font-family:'Noto Serif Display', serif; }
+
+  #scene-art{ position:fixed; inset:0; z-index:1; width:100%; height:100%; pointer-events:none; }
+  .art-group{ opacity:0; transition:opacity 1.1s ease; }
+  .art-group.active{ opacity:1; }
+  @keyframes flyacross{ 0%{ transform:translate(-40px,260px) rotate(-6deg);} 50%{ transform:translate(210px,170px) rotate(8deg);} 100%{ transform:translate(440px,230px) rotate(-6deg);} }
+  .fly-butterfly{ animation: flyacross 10s ease-in-out infinite alternate; }
+  @keyframes flameflicker{ 0%,100%{ transform:scaleY(1) skewX(0deg); opacity:.88;} 30%{ transform:scaleY(1.1) skewX(-2deg); opacity:1;} 60%{ transform:scaleY(.92) skewX(2deg); opacity:.82;} }
+  .flame{ animation: flameflicker 1.5s ease-in-out infinite; transform-box:fill-box; transform-origin:bottom center; }
+  .flame:nth-child(2){ animation-delay:.2s; } .flame:nth-child(3){ animation-delay:.45s; }
+  @keyframes twitch{ 0%,100%{transform:rotate(0deg);} 10%{transform:rotate(-3deg);} 22%{transform:rotate(2deg);} 34%{transform:rotate(-4deg);} 46%{transform:rotate(1deg);} 58%{transform:rotate(-2deg);} 70%{transform:rotate(3deg);} 82%{transform:rotate(-1deg);} 94%{transform:rotate(2deg);} }
+  .pin-wing-art{ animation: twitch 2.2s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+  @keyframes dripfall{ 0%{ transform:translateY(0); opacity:.9;} 100%{ transform:translateY(34px); opacity:0;} }
+  .blood-drip{ animation: dripfall 1.8s linear infinite; }
+  .blood-drip:nth-child(2){ animation-delay:.6s; } .blood-drip:nth-child(3){ animation-delay:1.1s; }
+  @keyframes pulseglow{ 0%,100%{ opacity:.55; filter:blur(2px);} 50%{ opacity:.95; filter:blur(0px);} }
+  .lantern{ animation: pulseglow 3.2s ease-in-out infinite; }
+  @keyframes swaybranch{ 0%,100%{ transform:rotate(-1.5deg);} 50%{ transform:rotate(1.5deg);} }
+  .branch{ animation: swaybranch 5s ease-in-out infinite; transform-box:fill-box; transform-origin:top center; }
+  @keyframes doorglow{ 0%{ opacity:.25; } 100%{ opacity:1; } }
+  .crack{ animation: doorglow 3s ease-in forwards; }
+
+  canvas#fx{ position:fixed; inset:0; width:100%; height:100%; z-index:2; pointer-events:none; }
+  #vignette{
+    position:fixed; inset:0; z-index:3; pointer-events:none;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0) 35%, rgba(0,0,0,0.78) 100%);
+  }
+  #flash{
+    position:fixed; inset:0; z-index:5; pointer-events:none;
+    background:var(--blood-bright); opacity:0; mix-blend-mode:screen;
+  }
+  .flash-on{ animation:flashpulse 0.45s ease-out; }
+  @keyframes flashpulse{ 0%{opacity:.55;} 100%{opacity:0;} }
+
+  .shake{ animation: shakeit 0.35s ease-in-out; }
+  @keyframes shakeit{
+    0%,100%{ transform:translate(0,0); }
+    20%{ transform:translate(-4px,2px); }
+    40%{ transform:translate(4px,-2px); }
+    60%{ transform:translate(-3px,1px); }
+    80%{ transform:translate(3px,-1px); }
+  }
+
+  /* ---------- mood backgrounds (on #stage) ---------- */
+  #stage{
+    position:fixed; inset:0; z-index:0;
+    background: radial-gradient(circle at 50% 30%, var(--bg-deep) 0%, var(--bg-void) 75%);
+    transition: background 1.4s ease;
+  }
+  .mood-forest{ background: radial-gradient(circle at 50% 25%, #1c2418 0%, #120a10 55%, var(--bg-void) 100%); }
+  .mood-fire{ background: radial-gradient(circle at 50% 70%, #4a1308 0%, #1d0a0c 55%, var(--bg-void) 100%); }
+  .mood-pin{ background: radial-gradient(circle at 50% 40%, #5c0d24 0%, #1c0509 60%, var(--bg-void) 100%); }
+  .mood-ash{ background: radial-gradient(circle at 50% 50%, #2b2128 0%, #100a0d 60%, var(--bg-void) 100%); }
+  .mood-spirit{ background: radial-gradient(circle at 50% 20%, #3a2536 0%, #150c14 60%, var(--bg-void) 100%); }
+  .mood-threshold{ background: radial-gradient(circle at 50% 50%, #6b4a2e 0%, #1a1108 50%, var(--bg-void) 100%); }
+
+  /* ---------- title screen ---------- */
+  #title-screen{
+    position:fixed; inset:0; z-index:10; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center; padding:8vh 6vw;
+    background: radial-gradient(circle at 50% 30%, #20111c 0%, var(--bg-void) 70%);
+  }
+  .eyebrow{ letter-spacing:.32em; font-size:.68rem; color:var(--amber); text-transform:uppercase; opacity:.85; }
+  h1.title{
+    font-size: clamp(2.2rem, 9vw, 3.4rem); margin:.4em 0 .1em; line-height:1.05;
+    color:var(--paper); text-shadow:0 0 24px rgba(196,38,79,0.35);
+  }
+  .subtitle{ color:var(--violet); font-style:italic; font-size:1rem; margin-bottom:2.2rem; }
+
+  .pin-icon{ width:120px; height:140px; margin:1rem 0 2.4rem; position:relative; }
+  .wing{ position:absolute; top:38px; width:46px; height:62px; background:linear-gradient(160deg, var(--violet) 0%, var(--violet-deep) 100%);
+    border-radius:60% 40% 70% 30%/55% 45% 65% 35%; opacity:.92; filter:drop-shadow(0 0 10px rgba(138,74,120,.5));}
+  .wing.l{ left:6px; transform-origin:right center; animation:flutterL 2.6s ease-in-out infinite; }
+  .wing.r{ right:6px; transform-origin:left center; animation:flutterR 2.6s ease-in-out infinite; }
+  @keyframes flutterL{ 0%,100%{ transform:rotate(-6deg) scaleX(1);} 50%{ transform:rotate(-22deg) scaleX(.86);} }
+  @keyframes flutterR{ 0%,100%{ transform:rotate(6deg) scaleX(1);} 50%{ transform:rotate(22deg) scaleX(.86);} }
+  .needle{ position:absolute; left:50%; top:18px; width:2px; height:104px; background:linear-gradient(#cfc9c2,#8d877f); transform:translateX(-50%); box-shadow:0 0 4px rgba(0,0,0,.6); }
+  .drop{ position:absolute; left:50%; top:120px; width:6px; height:9px; background:var(--blood-bright); border-radius:50% 50% 50% 0; transform:translateX(-50%) rotate(45deg); animation: drip 2.6s ease-in infinite; opacity:0; }
+  @keyframes drip{ 0%{ opacity:0; top:120px;} 8%{opacity:.9;} 70%{ opacity:.7; top:172px;} 100%{ opacity:0; top:180px;} }
+
+  button.cta{
+    font-family:'Be Vietnam Pro', sans-serif; font-weight:600; letter-spacing:.06em;
+    background:transparent; color:var(--paper); border:1px solid var(--amber);
+    padding:.85em 2.2em; border-radius:2px; font-size:.95rem; cursor:pointer;
+    transition: all .25s ease; text-transform:uppercase;
+  }
+  button.cta:hover, button.cta:focus-visible{ background:var(--amber); color:#1a1108; }
+  button.cta:active{ transform:scale(.97); }
+  .hint{ margin-top:1.6rem; font-size:.74rem; color:var(--text-dim); max-width:280px; }
+
+  /* ---------- game screen ---------- */
+  #game-screen{ position:fixed; inset:0; z-index:6; display:flex; flex-direction:column; }
+  #topbar{
+    position:relative; z-index:7; display:flex; align-items:center; justify-content:space-between;
+    padding: max(14px, env(safe-area-inset-top)) 18px 10px;
+    font-size:.62rem; letter-spacing:.22em; text-transform:uppercase; color:var(--text-dim);
+  }
+  #chapter-label{ transition:opacity .4s ease; }
+  #controls{ display:flex; gap:.4rem; }
+  .icon-btn{
+    background:none; border:1px solid var(--line); color:var(--text-dim); border-radius:6px;
+    width:32px; height:30px; font-size:.9rem; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; padding:0; line-height:1;
+  }
+  .icon-btn.active{ border-color:var(--amber); color:var(--amber); background:rgba(214,161,74,0.1); }
+  .icon-btn:active{ transform:scale(.93); }
+
+  #dialog-wrap{ margin-top:auto; position:relative; z-index:7; padding:0 4vw max(16px, env(safe-area-inset-bottom)); }
+  #dialog-panel{
+    background:var(--panel); border-top:1px solid var(--line);
+    border-radius:14px 14px 0 0; padding:1.3rem 1.4rem 1.1rem;
+    backdrop-filter: blur(6px); min-height:30vh; display:flex; flex-direction:column;
+    box-shadow:0 -10px 40px rgba(0,0,0,.5);
+  }
+  #speaker{
+    font-size:.78rem; letter-spacing:.1em; color:var(--amber); margin-bottom:.5rem; min-height:1em;
+    text-transform:uppercase; font-weight:600;
+  }
+  #dialog-text{
+    font-size:1.05rem; line-height:1.62; color:var(--paper); flex:1;
+    min-height:5.2em;
+  }
+  #continue-row{ display:flex; justify-content:flex-end; align-items:center; margin-top:.6rem; min-height:1.6rem; }
+  #continue-indicator{
+    font-size:.78rem; color:var(--text-dim); letter-spacing:.05em; opacity:0; transition:opacity .3s ease;
+    display:flex; align-items:center; gap:.4rem;
+  }
+  #continue-indicator.show{ opacity:1; animation:bob 1.4s ease-in-out infinite; }
+  @keyframes bob{ 0%,100%{ transform:translateX(0);} 50%{ transform:translateX(5px);} }
+
+  #choices{ display:flex; flex-direction:column; gap:.6rem; margin-top:.8rem; }
+  #choices.hidden{ display:none; }
+  .choice-btn{
+    font-family:'Be Vietnam Pro', sans-serif; text-align:left; background:rgba(255,255,255,0.02);
+    border:1px solid var(--line); color:var(--paper); padding:.85em 1.1em; border-radius:8px;
+    font-size:.96rem; cursor:pointer; transition: all .2s ease; line-height:1.4;
+  }
+  .choice-btn:hover, .choice-btn:focus-visible{ border-color:var(--amber); background:rgba(214,161,74,0.08); }
+  .choice-btn:active{ transform:scale(.985); }
+  .choice-btn .num{ color:var(--violet); margin-right:.5em; font-style:italic; }
+
+  #tap-zone{ position:absolute; inset:0; z-index:6; }
+
+  /* ---------- end screen ---------- */
+  #end-screen{
+    position:fixed; inset:0; z-index:20; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; text-align:center; padding:8vh 7vw; background:rgba(8,4,6,0.96);
+  }
+  #end-screen.hidden{ display:none; }
+  #end-title{ font-size:1.5rem; color:var(--amber); margin-bottom:.8rem; }
+  #end-body{ color:var(--text-dim); line-height:1.7; font-size:.95rem; max-width:340px; margin-bottom:2rem; }
+
+  @media (prefers-reduced-motion: reduce){
+    .wing, .drop, #continue-indicator.show, .shake{ animation:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="fx"></canvas>
+<div id="stage"></div>
+<svg id="scene-art" viewBox="0 0 400 800" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+  <g id="art-forest" class="art-group">
+    <g opacity="0.5" fill="#0d1810">
+      <path d="M0 800 L40 660 L80 800 Z"/><path d="M60 800 L120 600 L180 800 Z"/>
+      <path d="M220 800 L270 640 L320 800 Z"/><path d="M300 800 L360 670 L400 800 Z"/>
+    </g>
+    <g class="fly-butterfly">
+      <ellipse cx="-6" cy="0" rx="9" ry="13" fill="#8a4a78" opacity="0.85"/>
+      <ellipse cx="6" cy="0" rx="9" ry="13" fill="#8a4a78" opacity="0.85"/>
+      <rect x="-1" y="-9" width="2" height="18" fill="#2a1726"/>
+    </g>
+  </g>
+  <g id="art-fire" class="art-group">
+    <g transform="translate(140,800)">
+      <path class="flame" d="M0 0 C-22 -40 -10 -70 0 -120 C10 -70 22 -40 0 0 Z" fill="#c4264f" opacity="0.8"/>
+    </g>
+    <g transform="translate(220,800)">
+      <path class="flame" d="M0 0 C-18 -50 -6 -90 0 -150 C6 -90 18 -50 0 0 Z" fill="#d6a14a" opacity="0.7"/>
+    </g>
+    <g transform="translate(280,800)">
+      <path class="flame" d="M0 0 C-16 -35 -8 -60 0 -100 C8 -60 16 -35 0 0 Z" fill="#c4264f" opacity="0.75"/>
+    </g>
+  </g>
+  <g id="art-pin" class="art-group">
+    <g transform="translate(200,330)">
+      <rect x="-14" y="-90" width="28" height="220" rx="6" fill="#241410" opacity="0.6"/>
+      <g class="pin-wing-art">
+        <ellipse cx="-32" cy="-10" rx="34" ry="48" fill="#5c0d24" opacity="0.85"/>
+        <ellipse cx="32" cy="-10" rx="34" ry="48" fill="#5c0d24" opacity="0.85"/>
+        <ellipse cx="-30" cy="40" rx="24" ry="34" fill="#3c0a18" opacity="0.85"/>
+        <ellipse cx="30" cy="40" rx="24" ry="34" fill="#3c0a18" opacity="0.85"/>
+      </g>
+      <rect x="-3" y="-58" width="6" height="116" fill="#1a0f0c"/>
+      <circle cx="-58" cy="-30" r="3" fill="#c9c2b8"/><circle cx="58" cy="-30" r="3" fill="#c9c2b8"/>
+      <circle cx="-52" cy="58" r="3" fill="#c9c2b8"/><circle cx="52" cy="58" r="3" fill="#c9c2b8"/>
+      <g fill="#c4264f">
+        <rect class="blood-drip" x="-1" y="64" width="3" height="10" rx="1"/>
+        <rect class="blood-drip" x="34" y="74" width="3" height="10" rx="1"/>
+        <rect class="blood-drip" x="-36" y="74" width="3" height="10" rx="1"/>
+      </g>
+    </g>
+  </g>
+  <g id="art-spirit" class="art-group">
+    <g class="branch" transform="translate(60,140)">
+      <path d="M0 0 C40 10 80 30 110 60" stroke="#4a2f44" stroke-width="4" fill="none" opacity="0.6"/>
+      <circle cx="40" cy="14" r="5" fill="#d6a14a" opacity="0.6"/>
+      <circle cx="78" cy="34" r="5" fill="#d6a14a" opacity="0.55"/>
+      <circle cx="105" cy="56" r="5" fill="#d6a14a" opacity="0.6"/>
+    </g>
+    <circle class="lantern" cx="320" cy="180" r="26" fill="#d6a14a" opacity="0.65"/>
+  </g>
+  <g id="art-threshold" class="art-group">
+    <rect x="140" y="260" width="120" height="320" rx="10" fill="#0d0805" opacity="0.85"/>
+    <rect class="crack" x="196" y="270" width="8" height="300" fill="#f3d9a4"/>
+  </g>
+</svg>
+<div id="vignette"></div>
+<div id="flash"></div>
+
+<!-- TITLE -->
+<section id="title-screen">
+  <div class="eyebrow">Truyện kinh dị · Việt Nam</div>
+  <h1 class="title serif">Bướm Báo Thù</h1>
+  <div class="subtitle">Điệp Tử — Demo Chương 1</div>
+  <div class="pin-icon">
+    <div class="needle"></div>
+    <div class="wing l"></div>
+    <div class="wing r"></div>
+    <div class="drop"></div>
+  </div>
+  <button class="cta" id="start-btn">Bắt đầu</button>
+  <p class="hint">Chuyển thể tương tác dựa trên cốt truyện gốc, lời thoại được viết lại. Chạm vào khung chữ để đọc tiếp. Có nhạc nền/hiệu ứng âm thanh và giọng đọc (dùng giọng máy có sẵn trên điện thoại, bật/tắt ở góc trên khi chơi).</p>
+</section>
+
+<!-- GAME -->
+<section id="game-screen" hidden>
+  <div id="topbar">
+    <span id="chapter-label">CHƯƠNG 1 · KHU RỪNG</span>
+    <div id="controls">
+      <button id="sound-btn" class="icon-btn active" aria-label="Bật/tắt âm thanh">🔊</button>
+      <button id="voice-btn" class="icon-btn" aria-label="Bật/tắt giọng đọc">🗣️</button>
+      <button id="restart-btn" class="icon-btn" aria-label="Về đầu">⟲</button>
+    </div>
+  </div>
+  <div id="dialog-wrap">
+    <div id="dialog-panel">
+      <div id="speaker"></div>
+      <div id="dialog-text"></div>
+      <div id="continue-row"><span id="continue-indicator">chạm để tiếp ›</span></div>
+      <div id="choices" class="hidden"></div>
+    </div>
+  </div>
+  <div id="tap-zone"></div>
+</section>
+
+<!-- END -->
+<section id="end-screen" class="hidden">
+  <div class="eyebrow" id="end-eyebrow">Kết cục</div>
+  <div id="end-title" class="serif"></div>
+  <div id="end-body"></div>
+  <button class="cta" id="end-restart-btn">Chơi lại</button>
+</section>
+
+<script>
+/* ============== STORY DATA ============== */
+/* Nội dung được viết lại theo văn phong riêng, dựa trên cốt truyện gốc "Bướm Báo Thù (Điệp Tử)". */
+const NODES = {
+  n1:{ section:"CHƯƠNG 1 · KHU RỪNG", mood:"forest", text:`Có một cánh rừng chưa từng in dấu chân người — nơi cây cỏ tốt tươi đến lạ, nắng xuyên từng kẽ lá cổ thụ, bươm bướm chao lượn không ngớt. Một góc địa đàng còn sót lại giữa trần gian.`, next:"n2" },
+  n2:{ mood:"forest", text:`Cho đến một buổi chiều đầu xuân. Tiếng máy nổ xé toạc sự tĩnh lặng ngàn năm — một chiếc thuyền cập bến, mang theo bảy kẻ lạ.`, next:"n3" },
+  n3:{ mood:"forest", speaker:"Người đàn ông râu rậm", text:`– Đẹp thế này mà chẳng ai bén mảng tới bao giờ, lạ thật đấy.`, next:"n4" },
+  n4:{ mood:"forest", speaker:"Người phụ nữ đeo kính", text:`– Ông không biết thôi. Đảo này đồn không lành — cây cỏ, sâu bọ ở đây ăn uống chẳng giống nơi nào cả.`, next:"n5" },
+  n5:{ mood:"forest", speaker:"Người tóc hai màu", text:`– Lấy con bướm làm ví dụ. Bình thường hoá bướm xong thì chỉ lo tìm bạn tình rồi chết, có ăn gì đâu. Nhưng bướm ở đây thì khác — chúng ăn cả đồng loại, để sống dai hơn.`, next:"n6" },
+  n6:{ mood:"forest", speaker:"Người mặc áo khoác dày", text:`– Bớt tám đi! Khảo sát cho lẹ còn về báo, người ta còn đưa thợ tới san phẳng chỗ này dựng khu vui chơi mừng sinh nhật cậu ấm. Này, lề mề gì đó, mang đồ lên mau!`, next:"n7" },
+  n7:{ mood:"forest", text:`Nhóm người tản vào rừng. Không ai trong số họ biết, chỉ ít phút nữa thôi, một thảm kịch sẽ bắt đầu — từ một cánh bướm tím còn rất trẻ.`, next:"n8" },
+  n8:{ mood:"forest", text:`Bướm Tím vừa lớn, đôi cánh tím biếc còn rực rỡ sức sống. Nàng sà xuống một bông hoa xanh vừa hé nở — bữa chiều có vẻ ngon lành.`, next:"n9" },
+  n9:{ mood:"forest", speaker:"Chú bé hoa", text:`– Ai... ai đang đậu trên tôi vậy?`, next:"n10" },
+  n10:{ mood:"forest", speaker:"Bướm Tím", text:`– Ta đây, Bướm Tím. Bụng ta đang réo, định ăn ngươi đấy.`, next:"n11" },
+  n11:{ mood:"forest", speaker:"Chú bé hoa", text:`– Đừng ăn tôi mà! Tôi mới nở được mấy hôm, còn muốn sống thêm nữa...`, next:"n12" },
+  n12:{ mood:"forest", speaker:"Bướm Tím", text:`– Mới nở thì cũng đã được tắm nắng, nghe gió, uống sương rồi còn gì. Vậy là đủ cho một kiếp hoa. Nằm yên, để ta ăn.`, next:"n13" },
+  n13:{ mood:"forest", text:`Mặc tiếng van xin nức nở, Bướm Tím nuốt trọn bông hoa. No nê, nàng vỗ cánh bay về tổ.`, next:"n14" },
+  n14:{ mood:"fire", text:`Nhưng về đến nơi, nàng chết lặng: cả nhà bướm tím của nàng đã bị giết sạch. Chưa kịp hiểu chuyện gì, một tấm lưới chụp xuống, siết chặt lấy nàng.`, next:"n15" },
+  n15:{ mood:"fire", speaker:"Người phụ nữ đeo kính", text:`– Ơ, còn sót một con sống nè. Làm gì với nó bây giờ?`, next:"n16" },
+  n16:{ mood:"fire", text:`Bướm Tím chới với trong lưới. Gần đó, những khung kính bày la liệt xác bướm khô — bị ghim cứng, cánh xòe rộng như tiêu bản. Nàng rùng mình: đây là con người.`, next:"n17" },
+  n17:{ mood:"fire", speaker:"Người phụ nữ đeo kính", text:`– Không có bật lửa thì dùng diêm vậy.`, next:"n18" },
+  n18:{ mood:"fire", fx:"flash", text:`Que diêm xoẹt sáng, rơi xuống đống cỏ khô dưới gốc cây — nơi từng là tổ ấm của Bướm Tím. Lửa bén nhanh, bốc cao ngùn ngụt.`, next:"n19" },
+  n19:{ mood:"fire", fx:"shake", speaker:"Bướm Tím", text:`– Đừng... đừng đốt nhà tôi! Làm ơn!`, next:"n20" },
+  n20:{ mood:"fire", text:`Nhưng tiếng kêu của một con bướm, loài người nào nghe thấu. Ngọn lửa nuốt chửng cả khoảnh rừng quanh đó trong tích tắc.`, next:"n21" },
+  n21:{ mood:"fire", speaker:"Người đàn ông râu rậm", text:`– Đôi cánh đẹp thật, tiếc là hoa văn chưa nhìn rõ được.`, next:"n22" },
+  n22:{ mood:"pin", speaker:"Người tóc hai màu", text:`– Chuyện nhỏ. Đưa đây, tôi có cách cho mấy người thấy rõ.`, next:"n23" },
+  n23:{ mood:"pin", fx:"shake", text:`Gã vứt điếu thuốc, giật lấy búa cùng bốn cây đinh gỉ, ấn chặt Bướm Tím lên thân cây. Quay sang gã thanh niên vụng về đứng cạnh, hắn quát: giữ chặt con bướm, đừng để xổng.`, next:"n24" },
+  n24:{ mood:"pin", fx:"shake", text:`Đinh đầu tiên xuyên qua cánh. Bướm Tím rú lên, máu nhỏ giọt thấm vào lớp vỏ cây xù xì. Một, hai, ba, rồi cây đinh thứ tư — bốn góc cánh nàng bị ghim chết cứng vào thân gỗ.`, next:"n25" },
+  n25:{ mood:"pin", fx:"shake", speaker:"Bướm Tím", text:`– Đau... đau quá...`, next:"n26" },
+  n26:{ mood:"pin", text:`Mười mấy con mắt dán chặt lấy đôi cánh đang rỉ máu, trầm trồ trước thứ vẻ đẹp tàn khốc ấy — chẳng khác nào một cuộc đóng đinh thu nhỏ. Bảy kẻ đứng đó, với Bướm Tím, chẳng còn là người — mà là bảy con quái vật.`, next:"n27" },
+  n27:{ mood:"pin", speaker:"Người mặc áo khoác dày", text:`– Ngắm chán rồi thì đốt quách đi. Trời sắp tối, còn phải đi xem hết khu rừng này.`, next:"n28" },
+  n28:{ mood:"ash", text:`Họ tản đi, bỏ mặc nàng treo trên thân cây. Bướm Tím nhìn về chân trời, nơi mặt trời đang khuất dần sau rặng núi — hình ảnh cuối cùng trước khi ngọn lửa nuốt trọn lấy nàng. Trong tro tàn, một thứ gì đó rất mãnh liệt đã nhen lên.`, next:"n29" },
+
+  n29:{ section:"CHƯƠNG 1 · CÕI U MINH", mood:"spirit", text:`Tiếng chim hót khẽ vang bên tai. Bướm Tím mở mắt, thấy mình đang nằm trong một căn phòng gỗ nhỏ, ánh sáng nhạt nhòa như nắng chiều sắp tắt.`, next:"n30" },
+  n30:{ mood:"spirit", speaker:"Bà Bà", text:`– Tỉnh rồi à?`, next:"n31" },
+  n31:{ mood:"spirit", speaker:"Bướm Tím", text:`– Bà là ai? Đây là đâu vậy?`, next:"n32" },
+  n32:{ mood:"spirit", speaker:"Bà Bà", text:`– Một nơi tách biệt hẳn với trần gian. Con đã chết rồi, biết không?`, next:"n33" },
+  n33:{ mood:"spirit", text:`Ký ức về buổi hoàng hôn năm xưa ùa về, rõ như mới hôm qua. Bướm Tím vẫn còn thấy rợn người.`, next:"n34" },
+  n34:{ mood:"spirit", speaker:"Bà Bà", text:`– Cứ gọi ta là Bà Bà thôi. Ta thích cây cỏ, sâu bọ — loài người đâu biết, chúng cũng có linh hồn. Sống tử tế thì vẫn luân hồi chuyển kiếp được như thường.`, next:"n35" },
+  n35:{ mood:"spirit", speaker:"Bà Bà", text:`– Ta đưa hồn con về đây, để con tự quyết định điều mình muốn. Ra ngoài kia mà xem.`, next:"n36" },
+  n36:{ mood:"spirit", text:`Bướm Tím bước ra hành lang gỗ. Một khu vườn hiện ra trước mắt — hoa nở rộ, bướm lượn, suối chảy róc rách dưới gốc cổ thụ, tất cả nhuốm sắc hoàng hôn dịu dàng.`, next:"n37" },
+  n37:{ mood:"spirit", speaker:"Bà Bà", text:`– Những gì con thấy đều là linh hồn cả. Ta hồi sinh chúng, cho chúng được sống thêm một lần — và tự chọn lấy con đường của mình.`, next:"n38" },
+  n38:{ mood:"spirit", speaker:"Bướm Tím", text:`– Vậy nghĩa là... giờ con có thể làm bất cứ điều gì con muốn?`, next:"n39" },
+  n39:{ mood:"spirit", speaker:"Bà Bà", text:`– Đúng vậy. Ta không khuyên, cũng chẳng cản. Chỉ có điều, ở đời, gieo nhân nào thì gặt quả nấy.`, next:"n40" },
+
+  n40:{ mood:"spirit", text:`Trong lòng Bướm Tím, một câu hỏi cứ cồn cào: giờ đây, nàng thật sự muốn điều gì?`,
+        choices:[
+          { label:"Trả thù.", next:"n41" },
+          { label:"Buông hết, xin được đầu thai.", next:"end_letgo" }
+        ] },
+
+  n41:{ mood:"spirit", speaker:"Bướm Tím", text:`– Trả thù. Đó là điều duy nhất con muốn.`, next:"n42" },
+  n42:{ mood:"spirit", speaker:"Bà Bà", text:`– Tùy con thôi. Ta không cổ vũ cũng chẳng ngăn cản. Chỉ nhớ, lúc nào cô đơn quá, cứ quay về đây tìm ta.`, next:"n43" },
+  n43:{ mood:"spirit", speaker:"Bướm Tím", text:`– Nhưng con chỉ là một linh hồn. Con cần một hình hài — hình hài con người.`, next:"n44" },
+  n44:{ mood:"spirit", speaker:"Bà Bà", text:`– Vậy thì đi tìm lấy một thân xác mà nhập vào. Cần thiết thì đổi luôn gương mặt, đỡ phiền phức về sau. Thấy cánh cửa gỗ cạnh giường tre kia không? Mở ra, bước qua, là tới cõi người.`, next:"n45" },
+  n45:{ mood:"threshold", fx:"flash", text:`Bướm Tím đặt tay lên cánh cửa, đẩy nhẹ. Phía sau là một con đường nhỏ chìm trong bóng tối — và xa xa, ánh sáng chói gắt cùng tiếng người huyên náo đang chờ.`, next:"end_main" },
+
+  end_main:{ end:true, mood:"threshold", title:"Hết Chương 1 — Bản Demo", body:`Bướm Tím sắp bước vào cõi người, mang theo một mối hận chưa nguôi. Hành trình trở thành Điệp Tử và cuộc trả thù của nàng sẽ còn dài... Chương 2 đang chờ phía trước.` },
+  end_letgo:{ end:true, mood:"spirit", title:"Kết cục phụ — Buông Bỏ", body:`Bà Bà khẽ gật đầu, không một lời trách. Ánh sáng ấm áp bao trùm lấy Bướm Tím — một vòng luân hồi mới lặng lẽ bắt đầu, không hận thù, không níu kéo. Đây chỉ là một trong những kết cục có thể xảy ra — chọn "Trả thù" ở khúc rẽ để theo mạch chính của câu chuyện.` },
+};
+
+/* ============== ENGINE ============== */
+const titleScreen = document.getElementById('title-screen');
+const gameScreen = document.getElementById('game-screen');
+const endScreen = document.getElementById('end-screen');
+const stage = document.getElementById('stage');
+const speakerEl = document.getElementById('speaker');
+const textEl = document.getElementById('dialog-text');
+const continueRow = document.getElementById('continue-indicator');
+const choicesEl = document.getElementById('choices');
+const chapterLabel = document.getElementById('chapter-label');
+const tapZone = document.getElementById('tap-zone');
+const flashEl = document.getElementById('flash');
+const dialogPanel = document.getElementById('dialog-panel');
+
+let typing = false, typeTimer = null, currentNode = null, currentSection = "";
+let lastAmbMood = null, sfxOn = true, voiceOn = false;
+
+function setMood(mood){
+  stage.className = '';
+  if(mood) stage.classList.add('mood-' + mood);
+  setParticleMood(mood);
+  document.querySelectorAll('.art-group').forEach(g=>g.classList.remove('active'));
+  if(mood){ const el = document.getElementById('art-' + mood); if(el) el.classList.add('active'); }
+  if(mood !== lastAmbMood){ lastAmbMood = mood; startAmbience(mood); }
+}
+
+function doFx(fx){
+  if(fx === 'flash'){
+    flashEl.classList.remove('flash-on'); void flashEl.offsetWidth; flashEl.classList.add('flash-on');
+    playStinger();
+  }
+  if(fx === 'shake'){
+    dialogPanel.classList.remove('shake'); void dialogPanel.offsetWidth; dialogPanel.classList.add('shake');
+    stage.classList.remove('shake'); void stage.offsetWidth; stage.classList.add('shake');
+    playImpact();
+  }
+}
+
+function showNode(id){
+  const node = NODES[id];
+  currentNode = node;
+  if(node.section && node.section !== currentSection){
+    currentSection = node.section;
+    chapterLabel.style.opacity = 0;
+    setTimeout(()=>{ chapterLabel.textContent = currentSection; chapterLabel.style.opacity = 1; }, 350);
+  }
+  setMood(node.mood);
+  if(node.fx) doFx(node.fx);
+
+  if(node.end){ renderEnd(node); return; }
+
+  speakerEl.textContent = node.speaker || '';
+  choicesEl.classList.add('hidden'); choicesEl.innerHTML = '';
+  continueRow.classList.remove('show');
+  speakNode(node);
+  typeText(node.text);
+}
+
+function typeText(full){
+  clearInterval(typeTimer);
+  textEl.textContent = '';
+  let i = 0; typing = true;
+  const delay = 18;
+  typeTimer = setInterval(()=>{
+    textEl.textContent = full.slice(0, i+1);
+    i++;
+    if(i >= full.length){
+      clearInterval(typeTimer); typing = false;
+      onTypeDone();
+    }
+  }, delay);
+}
+
+function finishTypingNow(){
+  clearInterval(typeTimer); typing = false;
+  textEl.textContent = currentNode.text;
+  onTypeDone();
+}
+
+function onTypeDone(){
+  if(currentNode.choices){
+    choicesEl.classList.remove('hidden');
+    choicesEl.innerHTML = '';
+    currentNode.choices.forEach((c, idx)=>{
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.innerHTML = '<span class="num">' + (idx+1) + ' ·</span>' + c.label;
+      btn.onclick = (e)=>{ e.stopPropagation(); playBlip(620); showNode(c.next); };
+      choicesEl.appendChild(btn);
+    });
+  } else {
+    continueRow.classList.add('show');
+  }
+}
+
+tapZone.addEventListener('click', ()=>{
+  if(!currentNode || currentNode.choices) return;
+  if(typing){ finishTypingNow(); return; }
+  if(currentNode.next){ playBlip(480); showNode(currentNode.next); }
+});
+
+function renderEnd(node){
+  gameScreen.hidden = true;
+  endScreen.classList.remove('hidden');
+  document.getElementById('end-title').textContent = node.title;
+  document.getElementById('end-body').textContent = node.body;
+  speakText(node.title + '. ' + node.body);
+}
+
+document.getElementById('start-btn').onclick = ()=>{
+  ensureAudio(); playBlip(700);
+  titleScreen.style.display = 'none';
+  gameScreen.hidden = false;
+  showNode('n1');
+};
+document.getElementById('restart-btn').onclick = resetGame;
+document.getElementById('end-restart-btn').onclick = resetGame;
+
+const soundBtn = document.getElementById('sound-btn');
+const voiceBtn = document.getElementById('voice-btn');
+soundBtn.onclick = ()=> setSfx(!sfxOn);
+voiceBtn.onclick = ()=> setVoice(!voiceOn);
+
+function resetGame(){
+  clearInterval(typeTimer); typing = false;
+  if('speechSynthesis' in window) speechSynthesis.cancel();
+  endScreen.classList.add('hidden');
+  gameScreen.hidden = true;
+  titleScreen.style.display = 'flex';
+  currentSection = "";
+  chapterLabel.textContent = "CHƯƠNG 1 · KHU RỪNG";
+  setMood(null);
+}
+
+/* ============== AUDIO ENGINE (tổng hợp, không cần file âm thanh) ============== */
+let audioCtx = null, masterGain = null;
+function ensureAudio(){
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = audioCtx.createGain(); masterGain.gain.value = sfxOn ? 0.7 : 0;
+    masterGain.connect(audioCtx.destination);
+  }
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+}
+function noiseBuffer(dur){
+  const n = Math.max(1, Math.floor(audioCtx.sampleRate * dur));
+  const buf = audioCtx.createBuffer(1, n, audioCtx.sampleRate);
+  const d = buf.getChannelData(0);
+  for(let i=0;i<n;i++) d[i] = Math.random()*2-1;
+  return buf;
+}
+function thump(freq, delay, vol){
+  if(!audioCtx) return;
+  const t = audioCtx.currentTime + delay;
+  const osc = audioCtx.createOscillator(); osc.type='sine';
+  osc.frequency.setValueAtTime(freq, t);
+  osc.frequency.exponentialRampToValueAtTime(Math.max(20,freq*0.6), t+0.18);
+  const g = audioCtx.createGain(); g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol, t+0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t+0.24);
+  osc.connect(g); g.connect(masterGain);
+  osc.start(t); osc.stop(t+0.26);
+}
+function playBlip(freq){
+  if(!sfxOn || !audioCtx) return;
+  const t = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator(); osc.type='sine'; osc.frequency.value = freq;
+  const g = audioCtx.createGain(); g.gain.setValueAtTime(0.0001,t);
+  g.gain.exponentialRampToValueAtTime(0.1, t+0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, t+0.13);
+  osc.connect(g); g.connect(masterGain); osc.start(t); osc.stop(t+0.15);
+}
+function playStinger(){
+  if(!sfxOn) return; ensureAudio();
+  const t = audioCtx.currentTime;
+  const src = audioCtx.createBufferSource(); src.buffer = noiseBuffer(0.35);
+  const filt = audioCtx.createBiquadFilter(); filt.type='bandpass';
+  filt.frequency.setValueAtTime(2200, t); filt.frequency.exponentialRampToValueAtTime(180, t+0.4);
+  const g = audioCtx.createGain(); g.gain.setValueAtTime(0.22, t); g.gain.exponentialRampToValueAtTime(0.0001, t+0.4);
+  src.connect(filt); filt.connect(g); g.connect(masterGain);
+  src.start(t); src.stop(t+0.42);
+}
+function playImpact(){
+  if(!sfxOn) return; ensureAudio();
+  thump(110, 0, 0.3);
+  const t = audioCtx.currentTime;
+  const src = audioCtx.createBufferSource(); src.buffer = noiseBuffer(0.06);
+  const g = audioCtx.createGain(); g.gain.setValueAtTime(0.18, t); g.gain.exponentialRampToValueAtTime(0.0001, t+0.08);
+  src.connect(g); g.connect(masterGain); src.start(t);
+}
+function playCrackle(){
+  if(!sfxOn || !audioCtx) return;
+  const t = audioCtx.currentTime;
+  const src = audioCtx.createBufferSource(); src.buffer = noiseBuffer(0.07);
+  const filt = audioCtx.createBiquadFilter(); filt.type='highpass'; filt.frequency.value = 1400;
+  const g = audioCtx.createGain(); g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(0.14 + Math.random()*0.12, t+0.005);
+  g.gain.exponentialRampToValueAtTime(0.0001, t+0.05+Math.random()*0.05);
+  src.connect(filt); filt.connect(g); g.connect(masterGain);
+  src.start(t); src.stop(t+0.15);
+}
+function playHeartbeat(){
+  if(!sfxOn || !audioCtx) return;
+  thump(70, 0, 0.12); thump(58, 0.18, 0.09);
+}
+
+let ambNodes = null;
+const AMB_CFG = {
+  forest:   { type:'lowpass',  freq:800,  q:0.7, vol:0.045 },
+  fire:     { type:'lowpass',  freq:1200, q:0.5, vol:0.06, crackle:true },
+  pin:      { type:'bandpass', freq:220,  q:1.2, vol:0.05, pulse:true },
+  ash:      { type:'lowpass',  freq:500,  q:0.6, vol:0.035 },
+  spirit:   { type:'highpass', freq:1800, q:0.4, vol:0.03 },
+  threshold:{ type:'lowpass',  freq:1000, q:0.5, vol:0.045 },
+};
+function startAmbience(mood){
+  if(!sfxOn || !mood || !AMB_CFG[mood]){ stopAmbience(true); return; }
+  ensureAudio();
+  stopAmbience(true);
+  const cfg = AMB_CFG[mood];
+  const src = audioCtx.createBufferSource(); src.buffer = noiseBuffer(2); src.loop = true;
+  const filt = audioCtx.createBiquadFilter(); filt.type = cfg.type; filt.frequency.value = cfg.freq; filt.Q.value = cfg.q;
+  const gain = audioCtx.createGain(); gain.gain.value = 0;
+  src.connect(filt); filt.connect(gain); gain.connect(masterGain);
+  src.start();
+  gain.gain.linearRampToValueAtTime(cfg.vol, audioCtx.currentTime + 1.2);
+  const lfo = audioCtx.createOscillator(); lfo.frequency.value = 0.08;
+  const lfoGain = audioCtx.createGain(); lfoGain.gain.value = cfg.freq * 0.3;
+  lfo.connect(lfoGain); lfoGain.connect(filt.frequency); lfo.start();
+  ambNodes = { src, gain, lfo };
+  if(cfg.crackle) ambNodes.crackleInt = setInterval(playCrackle, 260 + Math.random()*420);
+  if(cfg.pulse) ambNodes.pulseInt = setInterval(playHeartbeat, 900);
+}
+function stopAmbience(immediate){
+  if(!ambNodes) return;
+  const { src, gain, lfo, crackleInt, pulseInt } = ambNodes;
+  if(crackleInt) clearInterval(crackleInt);
+  if(pulseInt) clearInterval(pulseInt);
+  try{
+    const now = audioCtx.currentTime;
+    gain.gain.cancelScheduledValues(now); gain.gain.setValueAtTime(gain.gain.value, now);
+    gain.gain.linearRampToValueAtTime(0, now + (immediate ? 0.35 : 0.05));
+    setTimeout(()=>{ try{ src.stop(); lfo.stop(); }catch(e){} }, immediate ? 400 : 80);
+  }catch(e){}
+  ambNodes = null;
+}
+function setSfx(on){
+  sfxOn = on; ensureAudio();
+  const t = audioCtx.currentTime;
+  masterGain.gain.cancelScheduledValues(t); masterGain.gain.setValueAtTime(masterGain.gain.value, t);
+  masterGain.gain.linearRampToValueAtTime(on ? 0.7 : 0, t + 0.3);
+  if(on){ lastAmbMood = null; startAmbience(currentNode ? currentNode.mood : null); } else { stopAmbience(true); }
+  soundBtn.classList.toggle('active', on);
+  soundBtn.textContent = on ? '🔊' : '🔇';
+}
+
+/* ============== GIỌNG ĐỌC (Web Speech API) ============== */
+let viVoice = null;
+function loadVoices(){
+  if(!('speechSynthesis' in window)) return;
+  const voices = speechSynthesis.getVoices();
+  viVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('vi')) || null;
+}
+if('speechSynthesis' in window){
+  speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+}
+function speakText(str){
+  if(!voiceOn || !('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(str.replace(/^–\s*/, ''));
+  utter.lang = 'vi-VN';
+  if(viVoice) utter.voice = viVoice;
+  utter.rate = 0.97; utter.pitch = 1;
+  speechSynthesis.speak(utter);
+}
+function speakNode(node){ if(voiceOn) speakText(node.text); }
+function setVoice(on){
+  voiceOn = on;
+  voiceBtn.classList.toggle('active', on);
+  if(on && currentNode && !currentNode.end) speakNode(currentNode);
+  if(!on && 'speechSynthesis' in window) speechSynthesis.cancel();
+}
+
+/* ============== PARTICLE FX ============== */
+const canvas = document.getElementById('fx');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+function resize(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+resize(); addEventListener('resize', resize);
+
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let particleMood = 'calm';
+function setParticleMood(mood){
+  const map = { forest:'fog', fire:'embers', pin:'embers', ash:'ash', spirit:'wings', threshold:'calm' };
+  particleMood = map[mood] || 'calm';
+}
+
+function spawn(type){
+  if(type === 'fog'){
+    return { type, x:Math.random()*W, y:Math.random()*H*0.7, r: 80+Math.random()*120, vx:(Math.random()-0.5)*0.06, life:1, decay:0.0006, hue:'138,74,120' };
+  }
+  if(type === 'embers'){
+    return { type, x:Math.random()*W, y:H+10, r:1.5+Math.random()*2, vy:-(0.4+Math.random()*0.9), vx:(Math.random()-0.5)*0.4, life:1, decay:0.006+Math.random()*0.006, hue: Math.random()>0.5 ? '196,38,79' : '214,161,74' };
+  }
+  if(type === 'ash'){
+    return { type, x:Math.random()*W, y:-10, r:1+Math.random()*1.8, vy:0.25+Math.random()*0.35, vx:(Math.random()-0.5)*0.3, life:1, decay:0.003, hue:'165,144,140' };
+  }
+  if(type === 'wings'){
+    return { type, x:Math.random()*W, y:Math.random()*H, r:3+Math.random()*3, vy:-(0.12+Math.random()*0.18), vx:(Math.random()-0.5)*0.25, life:1, decay:0.0025, hue:'214,161,74', rot:Math.random()*6.28, rs:(Math.random()-0.5)*0.02 };
+  }
+  return { type:'calm', x:Math.random()*W, y:Math.random()*H, r:1, vy:-0.05, vx:0, life:1, decay:0.001, hue:'214,161,74' };
+}
+
+const MAXP = 46;
+function tick(){
+  if(!reducedMotion && particles.length < MAXP && Math.random() < 0.6){
+    particles.push(spawn(particleMood));
+  }
+  ctx.clearRect(0,0,W,H);
+  particles.forEach(p=>{
+    p.life -= p.decay;
+    if(p.type === 'fog'){
+      p.x += p.vx;
+      const g = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
+      g.addColorStop(0, `rgba(${p.hue},${0.10*p.life})`);
+      g.addColorStop(1, `rgba(${p.hue},0)`);
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.28); ctx.fill();
+    } else if(p.type === 'embers'){
+      p.x += p.vx; p.y += p.vy;
+      ctx.fillStyle = `rgba(${p.hue},${0.85*p.life})`;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.28); ctx.fill();
+    } else if(p.type === 'ash'){
+      p.x += p.vx; p.y += p.vy;
+      ctx.fillStyle = `rgba(${p.hue},${0.6*p.life})`;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.28); ctx.fill();
+    } else if(p.type === 'wings'){
+      p.x += p.vx; p.y += p.vy; p.rot += p.rs;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      ctx.fillStyle = `rgba(${p.hue},${0.5*p.life})`;
+      ctx.beginPath(); ctx.ellipse(0,0,p.r,p.r*1.6,0,0,6.28); ctx.fill();
+      ctx.restore();
+    } else {
+      p.y += p.vy;
+      ctx.fillStyle = `rgba(${p.hue},${0.35*p.life})`;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.28); ctx.fill();
+    }
+  });
+  particles = particles.filter(p=> p.life > 0 && p.y > -50 && p.y < H+50);
+  requestAnimationFrame(tick);
+}
+tick();
+</script>
+</body>
+</html>
